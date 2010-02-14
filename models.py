@@ -70,7 +70,7 @@ class Venue(models.Model):
     """
 
     name = models.CharField(max_length=128)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     address = models.CharField(max_length=128, blank=True)
     town = models.ForeignKey('Town')
@@ -83,7 +83,6 @@ class Venue(models.Model):
     class Meta:
         get_latest_by = 'created'
         ordering = ('name',)
-        unique_together = (('name', 'town'),)
 
     def __unicode__(self):
         return "%s, %s" % (self.name, self.town)
