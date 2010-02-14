@@ -40,7 +40,7 @@ How to install the app
 
 Clone this Git repository and add the ``gigs`` package to your Django project.
 The ``gigs`` directory must be on your ``PYTHON_PATH`` as everything is imported
-directly — for example, ``from gigs.models import Artist``.
+directly -- for example, ``from gigs.models import Artist``.
 
 Take the CSV link you copied above and create a variable in your project's
 ``settings.py`` named ``RIPPING_RECORDS_SPREADSHEET_URL``::
