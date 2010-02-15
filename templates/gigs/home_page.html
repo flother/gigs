@@ -35,7 +35,7 @@
 	<div class="gig_list">
 		<h2>Gigs next week</h2>
 		<ol>
-			{% for gig in gigs_this_week %}
+			{% for gig in gigs_next_week %}
 				<li class="vevent {% cycle first,second,third %}">
 					<a class="url" href="#">
 						<span class="summary">{{ gig.artist }}</span>
@@ -49,7 +49,7 @@
 	<div class="gig_list">
 		<h2>Newly listed gigs</h2>
 		<ol>
-			{% for gig in gigs_this_week %}
+			{% for gig in new_gigs %}
 				<li class="vevent {% cycle first,second,third %}">
 					<a class="url" href="#">
 						<span class="summary">{{ gig.artist }}</span>
