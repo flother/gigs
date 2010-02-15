@@ -154,9 +154,12 @@ class Command(NoArgsCommand):
                     # Blank row.
                     logger.debug('Ignored blank row.')
             else:
-                # If there are four columns it'll be a gig as long as "*DATE*"
-                # isn't the first column (if it is, it's a header row.)
-                if row[0] != "*DATE*":
+                # If there are four columns it's probably a gig.  The only other
+                # possibilities are if the first column is "*DATE*" (which means
+                # it's a header row) or if all columns are "--" which means the
+                # Google spreadsheet has fewer rows than last time (Google pads
+                # it out).
+                if not row[0] in ("*DATE*", "--"):
                     # Date of the gig based on the month header row we'll have
                     # come across earlier and the date column, which contains
                     # the day of month in a format like "mon 18th".
