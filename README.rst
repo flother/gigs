@@ -35,6 +35,14 @@ recommend creating your own spreadsheet so you retain full control.
 .. _original CSV data: http://spreadsheets.google.com/pub?key=thBslf6p90trUBz_tFOBo1g&output=csv
 
 
+Requirements
+==============
+
+  * Python 2.5
+  * Django 1.1 or greater (tested with the Subversion trunk)
+  * sorl-thumbnail: http://sorl-thumbnail.googlecode.com/
+
+
 How to install the app
 ========================
 
@@ -55,6 +63,22 @@ Include the gigs app in your project's ``INSTALLED_APPS``::
     )
 
 And finally run ``django-admin.py syncdb`` to create the database tables.
+
+
+Templates and media
+=====================
+
+You need to create a symlink named ``gigs`` to the ``gigs/media`` directory
+directly underneath your projects media directory.  For example, if your
+``MEDIA_URL`` is ``/media/`` this app's media files must be served from
+``/media/gigs/``.
+
+The templates included with the app make some assumptions about what blocks will
+be available.  You must define the following:
+
+  * ``title``: the content for the ``head`` ``title`` element
+  * ``body_id``: the content of the ``<body id="">`` attribute
+  * ``body``: the content of the page, somewhere within the ``body`` element
 
 
 Importing the gigs data
@@ -90,8 +114,7 @@ Functionality left to implement
 =================================
 
 The data import is complete but the app is missing views and templates for
-outputting the data outside the Django admin app.  I hope to rectify this
-shortly.
+outputting the data outside the Django admin app.  This is in progress.
 
 
 Get in touch
