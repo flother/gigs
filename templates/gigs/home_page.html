@@ -1,0 +1,63 @@
+{% extends "gigs/base.html" %}
+{% load thumbnail %}
+
+{% block title %}Tickets for gigs and music events in Edinburgh and Glasgow, Scotland{% endblock %}
+{% block body_id %}home{% endblock %}
+
+{% block body %}
+	<ol id="upcoming_gigs">
+		{% for gig in closest_gigs %}
+			{% thumbnail gig.artist.photo 220x147 crop="0,0" bw upscale as gig_thumb %}
+			<li class="vevent">
+				<a class="url" href="#">
+					<img alt="{{ gig.artist }}" height="147" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_220x147.jpg{% endif %}" width="220" title="">
+					<span class="summary">{{ gig.artist }}</span>
+					<span class="location">{{ gig.venue }}</span>
+				</a>
+				<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+			</li>
+		{% endfor %}
+	</ol>
+	<div class="gig_list">
+		<h2>Gigs this week</h2>
+		<ol>
+			{% for gig in gigs_this_week %}
+				<li class="vevent {% cycle first,second,third %}">
+					<a class="url" href="#">
+						<span class="summary">{{ gig.artist }}</span>
+						<span class="location">{{ gig.venue }}</span>
+					</a>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+	<div class="gig_list">
+		<h2>Gigs next week</h2>
+		<ol>
+			{% for gig in gigs_this_week %}
+				<li class="vevent {% cycle first,second,third %}">
+					<a class="url" href="#">
+						<span class="summary">{{ gig.artist }}</span>
+						<span class="location">{{ gig.venue }}</span>
+					</a>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+	<div class="gig_list">
+		<h2>Newly listed gigs</h2>
+		<ol>
+			{% for gig in gigs_this_week %}
+				<li class="vevent {% cycle first,second,third %}">
+					<a class="url" href="#">
+						<span class="summary">{{ gig.artist }}</span>
+						<span class="location">{{ gig.venue }}</span>
+					</a>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+{% endblock %}
