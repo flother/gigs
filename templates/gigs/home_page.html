@@ -32,7 +32,7 @@
 		<h2>Gigs this week</h2>
 		<ol>
 			{% for gig in gigs_this_week %}
-				<li class="vevent {% cycle first,second,third %}" style="white-space: nowrap; overflow: hidden">
+				<li class="vevent {% cycle first,second,third %}">
 					<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
 						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
 						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
