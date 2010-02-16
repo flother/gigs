@@ -22,12 +22,14 @@
 		<h2>Gigs this week</h2>
 		<ol>
 			{% for gig in gigs_this_week %}
-				<li class="vevent {% cycle first,second,third %}">
-					<a class="url" href="#">
-						<span class="summary">{{ gig.artist }}</span>
-						<span class="location">{{ gig.venue }}</span>
+				<li class="vevent {% cycle first,second,third %}" style="white-space: nowrap; overflow: hidden">
+					<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
+						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+						<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+						<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
 					</a>
-					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
 				</li>
 			{% endfor %}
 		</ol>
@@ -37,11 +39,47 @@
 		<ol>
 			{% for gig in gigs_next_week %}
 				<li class="vevent {% cycle first,second,third %}">
-					<a class="url" href="#">
-						<span class="summary">{{ gig.artist }}</span>
-						<span class="location">{{ gig.venue }}</span>
+					<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
+						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+						<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+						<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
 					</a>
-					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+	<div class="gig_list">
+		<h2>Browse by artist</h2>
+		<ol>
+			{% for artist in artists %}
+				<li class="{% cycle first,second,third %}">
+					<a href="#">{{ artist.name }}</a>
+				</li>
+			{% endfor %}
+			<li class="more"><a href="#">View all {{ number_of_artists }} artists&nbsp;…</a></li>
+		</ol>
+	</div>
+	<div class="gig_list">
+		<h2>Browse by venue</h2>
+		<ol>
+			{% for venue in venues %}
+				<li class="{% cycle first,second,third %}">
+					<a href="#">{{ venue.name }}, {{ venue.town }}</a>
+					<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
+				</li>
+			{% endfor %}
+			<li class="more"><a href="#">View all {{ number_of_venues }} venues&nbsp;…</a></li>
+		</ol>
+	</div>
+	<div class="gig_list">
+		<h2>Browse by town</h2>
+		<ol>
+			{% for town in towns %}
+				<li class="{% cycle first,second,third %}">
+					<a href="#">{{ town.name }}</a>
+					<span>{{ town.number_of_upcoming_gigs }} upcoming gig{{ town.number_of_upcoming_gigs|pluralize }}</span>
 				</li>
 			{% endfor %}
 		</ol>
