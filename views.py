@@ -45,7 +45,7 @@ def home_page(request):
     number_of_towns = Town.objects.count()
 
     upcoming_months_with_gigs = Gig.objects.published(date__gte=today).dates(
-        'date', 'month')
+        'date', 'month')[:8]
 
     context = {
         'closest_gigs': closest_gigs,
