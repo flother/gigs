@@ -44,6 +44,9 @@ def home_page(request):
     towns = Town.objects.all()
     number_of_towns = Town.objects.count()
 
+    upcoming_months_with_gigs = Gig.objects.published(date__gte=today).dates(
+        'date', 'month')
+
     context = {
         'closest_gigs': closest_gigs,
         'gigs_this_week': gigs_this_week,
@@ -55,6 +58,7 @@ def home_page(request):
         'number_of_artists': number_of_artists,
         'number_of_venues': number_of_venues,
         'number_of_towns': number_of_towns,
+        'upcoming_months_with_gigs': upcoming_months_with_gigs,
     }
     return render_to_response('gigs/home_page.html', context,
         RequestContext(request))

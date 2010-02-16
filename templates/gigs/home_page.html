@@ -19,6 +19,16 @@
 		{% endfor %}
 	</ol>
 	<div class="list">
+		<h2>Browse gigs by date</h2>
+		<ol>
+			{% for month in upcoming_months_with_gigs %}
+				<li class="{% cycle first,second,third %}">
+					<a href="#">{{ month|date:"F" }}</a>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+	<div class="list">
 		<h2>Gigs this week</h2>
 		<ol>
 			{% for gig in gigs_this_week %}
