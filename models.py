@@ -59,7 +59,7 @@ class Artist(models.Model):
 
     def number_of_upcoming_gigs(self):
         """Return the number of gigs this artist is to play."""
-        return self.gig_set.filter(date__gte=datetime.date.today()).count()
+        return self.gig_set.published(date__gte=datetime.date.today()).count()
 
 
 class Venue(models.Model):
@@ -89,7 +89,7 @@ class Venue(models.Model):
 
     def number_of_upcoming_gigs(self):
         """Return the number of gigs this venue is to host."""
-        return self.gig_set.filter(date__gte=datetime.date.today()).count()
+        return self.gig_set.published(date__gte=datetime.date.today()).count()
 
 
 class Town(models.Model):
@@ -137,7 +137,7 @@ class Promoter(models.Model):
 
     def number_of_upcoming_gigs(self):
         """Return the number of gigs this promoter is to promote."""
-        return self.gig_set.filter(date__gte=datetime.date.today()).count()
+        return self.gig_set.published(date__gte=datetime.date.today()).count()
 
 
 class ImportIdentifier(models.Model):
