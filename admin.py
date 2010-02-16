@@ -21,7 +21,7 @@ class GigAdmin(admin.ModelAdmin):
     filter_horizontal = ('import_identifiers',)
     list_display = ('artist', 'venue', 'promoter', 'date', 'price', 'sold_out',
         'published')
-    list_filter = ('venue', 'promoter')
+    list_filter = ('sold_out', 'published', 'venue', 'promoter')
     prepopulated_field = {'slug': ('artist',)}
 
 
