@@ -23,6 +23,7 @@ class GigAdmin(admin.ModelAdmin):
         'published')
     list_filter = ('sold_out', 'published', 'venue', 'promoter')
     prepopulated_field = {'slug': ('artist',)}
+    search_fields = ('artist__name',)
 
 
 class ArtistAdmin(admin.ModelAdmin):
@@ -42,6 +43,7 @@ class ArtistAdmin(admin.ModelAdmin):
     filter_horizontal = ('import_identifiers',)
     list_display = ('name', 'number_of_upcoming_gigs')
     prepopulated_field = {'slug': ('title',)}
+    search_fields = ('name',)
 
 
 class VenueAdmin(admin.ModelAdmin):
