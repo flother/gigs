@@ -9,7 +9,7 @@
 		{% for gig in closest_gigs %}
 			{% thumbnail gig.artist.photo 220x147 crop="0,0" bw upscale as gig_thumb %}
 			<li class="vevent">
-				<a class="url" href="#">
+				<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
 					<img alt="{{ gig.artist }}" height="147" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_220x147.jpg{% endif %}" width="220" title="">
 					<span class="summary">{{ gig.artist }}</span>
 					<span class="location">{{ gig.venue }}</span>
@@ -23,7 +23,7 @@
 		<ol>
 			{% for month in upcoming_months_with_gigs %}
 				<li class="{% cycle first,second,third %}">
-					<a href="#">{{ month|date:"F" }}</a>
+					<a href="#" title="View all gigs in {{ month|date:"F Y" }}">{{ month|date:"F" }}</a>
 				</li>
 			{% endfor %}
 			<li class="more"><a href="#">View all dates&nbsp;…</a></li>
@@ -66,7 +66,7 @@
 		<ol>
 			{% for artist in artists %}
 				<li class="{% cycle first,second,third %}">
-					<a href="#">{{ artist.name }}</a>
+					<a href="#" title="See all gigs for {{ artist.name }}">{{ artist.name }}</a>
 				</li>
 			{% endfor %}
 			<li class="more"><a href="#">View all {{ number_of_artists }} artists&nbsp;…</a></li>
@@ -77,7 +77,7 @@
 		<ol>
 			{% for venue in venues %}
 				<li class="{% cycle first,second,third %}">
-					<a href="#">{{ venue.name }}, {{ venue.town }}</a>
+					<a href="#" title="Gigs at {{ venue.name }}, {{ venue.town }}">{{ venue.name }}, {{ venue.town }}</a>
 					<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
 				</li>
 			{% endfor %}
@@ -89,7 +89,7 @@
 		<ol>
 			{% for town in towns %}
 				<li class="{% cycle first,second,third %}">
-					<a href="#">{{ town.name }}</a>
+					<a href="#" title="Gigs in {{ town }}">{{ town.name }}</a>
 					<span>{{ town.number_of_upcoming_gigs }} upcoming gig{{ town.number_of_upcoming_gigs|pluralize }}</span>
 				</li>
 			{% endfor %}
@@ -100,7 +100,7 @@
 		<ol>
 			{% for gig in new_gigs %}
 				<li class="vevent {% cycle first,second,third %}">
-					<a class="url" href="#">
+					<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
 						<span class="summary">{{ gig.artist }}</span>
 						<span class="location">{{ gig.venue }}</span>
 					</a>
