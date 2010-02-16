@@ -165,8 +165,8 @@ class Town(models.Model):
                 date__gte=datetime.date.today()).values('venue__town__id')
             gig_count = upcoming_gigs.annotate(num_of_towns=Count('id'))
             try:
-                ordered_gig_count = gig_count.order_by('-num_of_venues')[0]
-                self.number_of_upcoming_gigs = ordered_gig_count['num_of_venues']
+                ordered_gig_count = gig_count.order_by('-num_of_towns')[0]
+                self.number_of_upcoming_gigs = ordered_gig_count['num_of_towns']
             except IndexError:
                 pass  # No gigs yet.
         super(Town, self).save(force_insert=False, force_update=False)
