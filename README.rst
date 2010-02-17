@@ -38,9 +38,16 @@ recommend creating your own spreadsheet so you retain full control.
 Requirements
 ==============
 
-  * Python 2.5
-  * Django 1.1 or greater (tested with the Subversion trunk)
-  * sorl-thumbnail: http://sorl-thumbnail.googlecode.com/
+* Python 2.5
+* Django 1.1 or greater (tested with the Subversion trunk)
+* sorl-thumbnail: http://sorl-thumbnail.googlecode.com/
+
+There is a management command, ``import_artist_photos`` that attempts to find
+and download a photo for each artist that doesn't yet have one.  It's entirely
+your choice as to whether you use this command, but if you do you'll also need
+the ``pylast`` module, `available from Google Code`_.
+
+.. _available from Google Code: http://pylast.googlecode.com/
 
 
 How to install the app
@@ -62,6 +69,11 @@ Include the gigs app in your project's ``INSTALLED_APPS``::
         'gigs',
     )
 
+If you intend to use the ``import_artist_photos`` management command you'll need
+to include your Last.fm API key in your Django project's settings::
+
+  LASTFM_API_KEY = 'YOUR_API_KEY_HERE'
+
 And finally run ``django-admin.py syncdb`` to create the database tables.
 
 
@@ -76,9 +88,9 @@ directly underneath your projects media directory.  For example, if your
 The templates included with the app make some assumptions about what blocks will
 be available.  You must define the following:
 
-  * ``title``: the content for the ``head`` ``title`` element
-  * ``body_id``: the content of the ``<body id="">`` attribute
-  * ``body``: the content of the page, somewhere within the ``body`` element
+* ``title``: the content for the ``head`` ``title`` element
+* ``body_id``: the content of the ``<body id="">`` attribute
+* ``body``: the content of the page, somewhere within the ``body`` element
 
 
 Importing the gigs data

@@ -42,10 +42,13 @@ class Artist(models.Model):
 
     """A musician, singer, or band."""
 
+    PHOTO_UPLOAD_DIRECTORY = 'gigs/img/artists'
+
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
     biography = models.TextField(blank=True)
-    photo = models.ImageField(upload_to='artists', blank=True, null=True)
+    photo = models.ImageField(upload_to=PHOTO_UPLOAD_DIRECTORY, blank=True,
+        null=True)
     web_site = models.URLField(blank=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
