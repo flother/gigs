@@ -16,7 +16,7 @@
 					{% if gig.price %}<span class="price">£{{ gig.price|stringformat:"0.2f" }}</span>{% endif %}
 					<span class="location" title="{{ gig.venue.name }}">{{ gig.venue.name|truncatewords:4 }}</span>
 				</a>
-				<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+				<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS F" }}</abbr>
 			</li>
 		{% endfor %}
 	</ol>
@@ -106,7 +106,7 @@
 						<span class="summary">{{ gig.artist }}</span>
 						<span class="location">{{ gig.venue }}</span>
 					</a>
-					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS F" }}</abbr>
 				</li>
 			{% endfor %}
 		</ol>
