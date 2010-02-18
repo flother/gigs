@@ -52,7 +52,8 @@ class AlbumAdmin(admin.ModelAdmin):
     """Django ModelAdmin class for the Album model."""
 
     date_hierarchy = 'release_date'
-    list_display = ('title', 'artist', 'release_date')
+    list_display = ('title', 'artist', 'release_date', 'asin', 'published')
+    list_filter = ('published', 'artist')
     search_fields = ('title',)
 
 

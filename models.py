@@ -3,7 +3,7 @@ import datetime
 from django.db import models
 from django.db.models import Count
 
-from gigs.managers import GigManager
+from gigs.managers import PublishedManager
 
 
 class ImportIdentifier(models.Model):
@@ -64,7 +64,7 @@ class Gig(models.Model):
     import_identifiers = models.ManyToManyField('ImportIdentifier',
         limit_choices_to={'type': ImportIdentifier.GIG_IMPORT_TYPE})
 
-    objects = GigManager()
+    objects = PublishedManager()
 
     class Meta:
         get_latest_by = 'created'
@@ -145,10 +145,13 @@ class Album(models.Model):
     released_in = models.CharField(max_length=2, choices=RELEASE_LOCATIONS,
         blank=True)
     asin = models.CharField(verbose_name='ASIN', max_length=16, blank=True)
+    published = models.BooleanField(default=True)
+
+    objects = PublishedManager()
 
     class Meta:
-        ordering = ('-release_date',)
-        unique_together = ('title', 'artist')
+        ordering = ('artist', '-release_date',)
+        unique_together = (('title', 'artist', 'asin'),)
 
     def __unicode__(self):
         return self.title
