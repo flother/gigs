@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from gigs.models import Gig, Artist, Venue, Town, Promoter, ImportIdentifier
+from gigs.models import Gig, Artist, Album, Venue, Town, Promoter,\
+    ImportIdentifier
 
 
 class GigAdmin(admin.ModelAdmin):
@@ -44,6 +45,15 @@ class ArtistAdmin(admin.ModelAdmin):
     list_display = ('name', 'number_of_upcoming_gigs')
     prepopulated_field = {'slug': ('title',)}
     search_fields = ('name',)
+
+
+class AlbumAdmin(admin.ModelAdmin):
+
+    """Django ModelAdmin class for the Album model."""
+
+    date_hierarchy = 'release_date'
+    list_display = ('title', 'artist', 'release_date')
+    search_fields = ('title',)
 
 
 class VenueAdmin(admin.ModelAdmin):
@@ -107,6 +117,7 @@ class PromoterAdmin(admin.ModelAdmin):
 
 admin.site.register(Gig, GigAdmin)
 admin.site.register(Artist, ArtistAdmin)
+admin.site.register(Album, AlbumAdmin)
 admin.site.register(Venue, VenueAdmin)
 admin.site.register(Town, TownAdmin)
 admin.site.register(Promoter, PromoterAdmin)

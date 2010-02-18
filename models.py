@@ -122,6 +122,38 @@ class Artist(models.Model):
         super(Artist, self).save(force_insert=False, force_update=False)
 
 
+class Album(models.Model):
+
+    """A musical release by an artist."""
+
+    PHOTO_UPLOAD_DIRECTORY = 'gigs/img/albums'
+    UK_RELEASE_LOCATION = 'GB'
+    US_RELEASE_LOCATION = 'US'
+    WORLDWIDE_RELEASE_LOCATION = 'XE'
+    RELEASE_LOCATIONS = (
+        (UK_RELEASE_LOCATION, 'United Kingdom'),
+        (US_RELEASE_LOCATION, 'United States'),
+        (WORLDWIDE_RELEASE_LOCATION, 'World wide'),
+    )
+
+    title = models.CharField(max_length=128)
+    artist = models.ForeignKey(Artist)
+    cover_art = models.ImageField(upload_to=PHOTO_UPLOAD_DIRECTORY, blank=True)
+    release_date_raw = models.CharField(max_length=16, editable=False,
+        blank=True)
+    release_date = models.DateField(blank=True, null=True)
+    released_in = models.CharField(max_length=2, choices=RELEASE_LOCATIONS,
+        blank=True)
+    asin = models.CharField(verbose_name='ASIN', max_length=16, blank=True)
+
+    class Meta:
+        ordering = ('-release_date',)
+        unique_together = ('title', 'artist')
+
+    def __unicode__(self):
+        return self.title
+
+
 class Venue(models.Model):
 
     """
