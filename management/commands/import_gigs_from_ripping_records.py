@@ -176,7 +176,7 @@ class Command(NoArgsCommand):
                 gig.venue, gig.date))
             # Find or create the gig's artist.
             artist_id, created = ImportIdentifier.objects.get_or_create(
-                identifier=gig.artist)
+                identifier=gig.artist, type=ImportIdentifier.ARTIST_IMPORT_TYPE)
             try:
                 artist = artist_id.artist_set.all()[0]
                 logger.debug('Found artist: %s.' % artist)
@@ -191,7 +191,7 @@ class Command(NoArgsCommand):
             # in the Ripping Records table row for the gig.
             if gig.town:
                 town_id, created = ImportIdentifier.objects.get_or_create(
-                    identifier=gig.town)
+                    identifier=gig.town, type=ImportIdentifier.TOWN_IMPORT_TYPE)
                 try:
                     town = town_id.town_set.all()[0]
                     logger.debug('Found town: %s.' % town)
@@ -209,7 +209,7 @@ class Command(NoArgsCommand):
 
             # Find or create the gig's venue.
             venue_id, created = ImportIdentifier.objects.get_or_create(
-                identifier=gig.venue)
+                identifier=gig.venue, type=ImportIdentifier.VENUE_IMPORT_TYPE)
             try:
                 venue = venue_id.venue_set.all()[0]
                 logger.debug('Found venue: %s.' % venue)
@@ -225,7 +225,8 @@ class Command(NoArgsCommand):
             promoter = None
             if gig.promoter:
                 promoter_id, created = ImportIdentifier.objects.get_or_create(
-                    identifier=gig.promoter)
+                    identifier=gig.promoter,
+                    type=ImportIdentifier.PROMOTER_IMPORT_TYPE)
                 try:
                     promoter = promoter_id.promoter_set.all()[0]
                     logger.debug('Found promoter: %s.' % promoter)
@@ -244,7 +245,8 @@ class Command(NoArgsCommand):
                 gig.date)
             # Find or create the gig.
             gig_id, created = ImportIdentifier.objects.get_or_create(
-                identifier=gig_identifier)
+                identifier=gig_identifier,
+                type=ImportIdentifier.GIG_IMPORT_TYPE)
             try:
                 db_gig = gig_id.gig_set.all()[0]
                 logger.debug('Gig already exists.')

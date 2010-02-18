@@ -6,6 +6,42 @@ from django.db.models import Count
 from gigs.managers import GigManager
 
 
+class ImportIdentifier(models.Model):
+
+    """
+    An unique identifier for an artist, venue, town, or promoter used when
+    importing data from Ripping Records.
+
+    This is used because the Ripping Records page will often use different
+    spellings (or misspell) the names of artists or venues especially.  But
+    instead of needing multiple database rows for the same object, this
+    identifier is used to link the many spellings to one model object.
+    """
+
+    GIG_IMPORT_TYPE = 1
+    ARTIST_IMPORT_TYPE = 2
+    VENUE_IMPORT_TYPE = 3
+    TOWN_IMPORT_TYPE = 4
+    PROMOTER_IMPORT_TYPE = 5
+    IMPORT_TYPES = (
+        (GIG_IMPORT_TYPE, 'Gig'),
+        (ARTIST_IMPORT_TYPE, 'Artist'),
+        (VENUE_IMPORT_TYPE, 'Venue'),
+        (TOWN_IMPORT_TYPE, 'Town'),
+        (PROMOTER_IMPORT_TYPE, 'Promoter'),
+    )
+
+    identifier = models.CharField(max_length=128)
+    type = models.IntegerField(choices=IMPORT_TYPES)
+
+    class Meta:
+        ordering = ('identifier',)
+        unique_together = (('identifier', 'type'),)
+
+    def __unicode__(self):
+        return self.identifier
+
+
 class Gig(models.Model):
 
     """
@@ -25,7 +61,8 @@ class Gig(models.Model):
     published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
-    import_identifiers = models.ManyToManyField('ImportIdentifier')
+    import_identifiers = models.ManyToManyField('ImportIdentifier',
+        limit_choices_to={'type': ImportIdentifier.GIG_IMPORT_TYPE})
 
     objects = GigManager()
 
@@ -53,7 +90,8 @@ class Artist(models.Model):
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
-    import_identifiers = models.ManyToManyField('ImportIdentifier')
+    import_identifiers = models.ManyToManyField('ImportIdentifier',
+        limit_choices_to={'type': ImportIdentifier.ARTIST_IMPORT_TYPE})
 
     class Meta:
         get_latest_by = 'created'
@@ -101,7 +139,8 @@ class Venue(models.Model):
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
-    import_identifiers = models.ManyToManyField('ImportIdentifier')
+    import_identifiers = models.ManyToManyField('ImportIdentifier',
+        limit_choices_to={'type': ImportIdentifier.VENUE_IMPORT_TYPE})
 
     class Meta:
         get_latest_by = 'created'
@@ -144,7 +183,8 @@ class Town(models.Model):
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
-    import_identifiers = models.ManyToManyField('ImportIdentifier')
+    import_identifiers = models.ManyToManyField('ImportIdentifier',
+        limit_choices_to={'type': ImportIdentifier.TOWN_IMPORT_TYPE})
 
     class Meta:
         get_latest_by = 'created'
@@ -185,7 +225,8 @@ class Promoter(models.Model):
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
-    import_identifiers = models.ManyToManyField('ImportIdentifier')
+    import_identifiers = models.ManyToManyField('ImportIdentifier',
+        limit_choices_to={'type': ImportIdentifier.PROMOTER_IMPORT_TYPE})
 
     class Meta:
         get_latest_by = 'created'
@@ -214,21 +255,3 @@ class Promoter(models.Model):
             except IndexError:
                 pass  # No gigs yet.
         super(Promoter, self).save(force_insert=False, force_update=False)
-
-
-class ImportIdentifier(models.Model):
-
-    """
-    An unique identifier for an artist, venue, town, or promoter used when
-    importing data from Ripping Records.
-
-    This is used because the Ripping Records page will often use different
-    spellings (or misspell) the names of artists or venues especially.  But
-    instead of needing multiple database rows for the same object, this
-    identifier is used to link the many spellings to one model object.
-    """
-
-    identifier = models.CharField(max_length=128)
-
-    def __unicode__(self):
-        return self.identifier
