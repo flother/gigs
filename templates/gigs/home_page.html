@@ -6,13 +6,15 @@
 
 {% block body %}
 	<ol id="upcoming_gigs">
+		<li id="intro">Looking for live music this week?</li>
 		{% for gig in closest_gigs %}
 			{% thumbnail gig.artist.photo 220x147 crop="0,0" bw upscale as gig_thumb %}
-			<li class="vevent">
+			<li class="vevent {% cycle one,two,three,four %}">
 				<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
 					<img alt="{{ gig.artist }}" height="147" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_220x147.jpg{% endif %}" width="220" title="">
-					<span class="summary">{{ gig.artist }}</span>
-					<span class="location">{{ gig.venue }}</span>
+					<span class="summary" title="{{ gig.artist.name }}">{{ gig.artist.name|truncatewords:4 }}</span>
+					{% if gig.price %}<span class="price">£{{ gig.price|stringformat:"0.2f" }}</span>{% endif %}
+					<span class="location" title="{{ gig.venue.name }}">{{ gig.venue.name|truncatewords:4 }}</span>
 				</a>
 				<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date}}</abbr>
 			</li>

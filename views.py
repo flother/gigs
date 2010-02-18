@@ -26,7 +26,7 @@ def home_page(request):
     # week (Monday to Sunday), and the 15 gigs most recently added to the
     # database.
     closest_gigs = Gig.objects.published(date__gte=today,
-        sold_out=False).select_related()[:8]
+        sold_out=False).select_related()[:7]
     gigs_this_week = Gig.objects.published(date__gte=today,
         date__lt=start_of_next_week).select_related()
     gigs_next_week = Gig.objects.published(date__gte=start_of_next_week,
