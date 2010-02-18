@@ -24,8 +24,8 @@ spreadsheet and in cell A1 type::
 Hit enter and the spreadsheet will be filled with the gigs information and will
 update every hour.  From there click the *Share* button in the top right and
 select *Publish as a web page* from the drop-down menu.  Choose to publish
-Sheet 1 only, tick *Automatically republish when changes are made* and click
-*Start publishing*.
+Sheet 1 only, tick *Automatically republish when changes are made*, and then
+click *Start publishing*.
 
 In the second section titled *Get a link to the published data* choose
 *CSV (comma separated values)* from the first drop-down and then copy the link
@@ -42,19 +42,29 @@ Requirements
 * Django 1.1 or greater (tested with the Subversion trunk)
 * sorl-thumbnail: http://sorl-thumbnail.googlecode.com/
 
-There is a management command, ``import_artist_photos`` that attempts to find
-and download a photo for each artist that doesn't yet have one.  It's entirely
-your choice as to whether you use this command, but if you do you'll also need
-the ``pylast`` module, `available from Google Code`_.
+Optional libraries
+====================
 
-.. _available from Google Code: http://pylast.googlecode.com/
+* pylast 0.4: http://pylast.googlecode.com/
+* musicbrainz2 0.7.0: http://musicbrainz.org/doc/PythonMusicBrainz2
+
+There's a management command, ``import_artist_photos``, that attempts to find
+and download a photo for each artist that doesn't yet have one.  It's entirely
+your choice as to whether you use this command, but if you do you'll need the
+``pylast`` module installed.
+
+Another management command, ``import_albums``, imports all official album
+releases for each artist in the database from MusicBrainz.  It also attempts to
+find the cover art for the imported albums from Last.fm.  Again, it's entirely
+you choice whether you use it or not, but if you do you'll need both ``pylast``
+and ``musicbrainz2`` installed.
 
 
 How to install the app
 ========================
 
-Clone this Git repository and add the ``gigs`` package to your Django project.
-The ``gigs`` directory must be on your ``PYTHON_PATH`` as everything is imported
+Clone this Git repository and add the ``gigs`` app to your Django project. The
+``gigs`` directory must be on your ``PYTHON_PATH`` as everything is imported
 directly -- for example, ``from gigs.models import Artist``.
 
 Take the CSV link you copied above and create a variable in your project's
@@ -90,7 +100,9 @@ be available.  You must define the following:
 
 * ``title``: the content for the ``head`` ``title`` element
 * ``body_id``: the content of the ``<body id="">`` attribute
-* ``body``: the content of the page, somewhere within the ``body`` element
+* ``body``: the wrapper around the content of the page, somewhere within the
+  ``body`` element
+* ``content``: the content of the page; a block within the ``body`` block.
 
 
 Importing the gigs data
