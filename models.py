@@ -68,7 +68,7 @@ class Gig(models.Model):
 
     class Meta:
         get_latest_by = 'created'
-        ordering = ('date',)
+        ordering = ('date', 'artist__slug')
         unique_together = (('artist', 'venue', 'date'),)
 
     def __unicode__(self):
@@ -95,7 +95,7 @@ class Artist(models.Model):
 
     class Meta:
         get_latest_by = 'created'
-        ordering = ('name',)
+        ordering = ('slug', 'name')
 
     def __unicode__(self):
         return self.name
@@ -144,7 +144,7 @@ class Venue(models.Model):
 
     class Meta:
         get_latest_by = 'created'
-        ordering = ('name',)
+        ordering = ('slug', 'name')
 
     def __unicode__(self):
         return "%s, %s" % (self.name, self.town)
@@ -230,7 +230,7 @@ class Promoter(models.Model):
 
     class Meta:
         get_latest_by = 'created'
-        ordering = ('name',)
+        ordering = ('slug', 'name')
 
     def __unicode__(self):
         return self.name
