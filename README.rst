@@ -102,7 +102,8 @@ be available.  You must define the following:
 * ``body_id``: the content of the ``<body id="">`` attribute
 * ``body``: the wrapper around the content of the page, somewhere within the
   ``body`` element
-* ``content``: the content of the page; a block within the ``body`` block.
+* ``content_intro``: a block immediately before the content ``block``
+* ``content``: the content of the page; a block within the ``body`` block
 
 
 Importing the gigs data
