@@ -62,3 +62,29 @@ def home_page(request):
     }
     return render_to_response('gigs/home_page.html', context,
         RequestContext(request))
+
+
+def artist_list(request):
+    """List all artists by name."""
+    earliest_gig = Gig.objects.published()[0]
+
+    # Create an empty dictionary with upper-case letters of the alphabet as
+    # keys and empty lists as values.  The lists will be filled with artists
+    # according to the first letter of their name.  Any band not starting with a
+    # letter of the Latin alphabet is added to '#'.
+    alphabet = ['#'] + map(chr, range(65, 91))
+    alphabetic_artists = dict((letter, []) for letter in alphabet)
+    artists = Artist.objects.all()
+    for artist in artists:
+        first_letter = artist.name[0].upper()
+        if not first_letter in alphabet:
+            first_letter = '#'
+        alphabetic_artists[first_letter].append(artist)
+
+    context = {
+        'earliest_gig': earliest_gig,
+        'alphabetic_artists': alphabetic_artists,
+        'artist_count': len(artists),
+    }
+    return render_to_response('gigs/artist_list.html', context,
+        RequestContext(request))

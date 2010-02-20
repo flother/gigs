@@ -71,7 +71,7 @@
 					<a href="#" title="See all gigs for {{ artist.name }}">{{ artist.name }}</a>
 				</li>
 			{% endfor %}
-			<li class="more"><a href="#">View all {{ number_of_artists }} artists&nbsp;…</a></li>
+			<li class="more"><a href="{% url gigs_artist_list %}">View all {{ number_of_artists }} artists&nbsp;…</a></li>
 		</ol>
 	</div>
 	<div class="list" id="venue_list">

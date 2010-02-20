@@ -1,0 +1,31 @@
+{% extends "gigs/base.html" %}
+{% load thumbnail %}
+
+{% block title %}Artists{% endblock %}
+{% block content_title %}Artists{% endblock %}
+{% block body_id %}artists{% endblock %}
+
+{% block content_intro %}
+	<p>Every band, musician, singer, and tribute act to have played a gig in Edinburgh or Glasgow. All {{ artist_count }} of them.</p>
+{% endblock %}
+
+{% block content %}
+	{% for letter, artists in alphabetic_artists.items %}
+		{% if artists %}
+			<div class="list">
+				<h2>{{ letter }}</h2>
+				<ol>
+					{% for artist in artists %}
+						<li>
+							<a href="#" title="See all gigs for {{ artist.name }}">
+								{% thumbnail artist.photo 63x63 crop="0,0" bw upscale as artist_thumb %}
+								<img alt="Photo of {{ artist.name }}" height="63" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63">
+								{{ artist.name }}
+							</a>
+						</li>
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endblock %}
