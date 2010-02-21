@@ -1,0 +1,23 @@
+{% extends "gigs/base.html" %}
+
+{% block title %}Promoters{% endblock %}
+{% block content_title %}Promoters{% endblock %}
+{% block body_id %}promoters{% endblock %}
+
+{% block content_intro %}
+	<p>So who exactly are the people behind these gigs? Not the bands, the organisers. You know, these folk.</p>
+{% endblock %}
+
+{% block content %}
+	<div class="list">
+		<h2>Promoters</h2>
+		<ol>
+			{% for promoter in promoter_list %}
+				<li>
+					<a href="#" title="See all gigs promoted by {{ promoter }}">{{ promoter }}</a>
+					<span>{{ promoter.number_of_upcoming_gigs }} upcoming gig{{ promoter.number_of_upcoming_gigs|pluralize }}</span>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+{% endblock %}
