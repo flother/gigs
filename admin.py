@@ -23,7 +23,7 @@ class GigAdmin(admin.ModelAdmin):
     list_display = ('artist', 'venue', 'promoter', 'date', 'price', 'sold_out',
         'published')
     list_filter = ('sold_out', 'published', 'venue', 'promoter')
-    prepopulated_field = {'slug': ('artist',)}
+    prepopulated_fields = {'slug': ('artist',)}
     search_fields = ('artist__name',)
 
 
@@ -43,7 +43,7 @@ class ArtistAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('import_identifiers',)
     list_display = ('name', 'number_of_upcoming_gigs')
-    prepopulated_field = {'slug': ('title',)}
+    prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
 
 
@@ -75,7 +75,7 @@ class VenueAdmin(admin.ModelAdmin):
     filter_horizontal = ('import_identifiers',)
     list_display = ('name', 'town', 'number_of_upcoming_gigs')
     list_filter = ('town',)
-    prepopulated_field = {'slug': ('name',)}
+    prepopulated_fields = {'slug': ('name',)}
 
 
 class TownAdmin(admin.ModelAdmin):
@@ -94,7 +94,7 @@ class TownAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('import_identifiers',)
     list_display = ('name', 'number_of_upcoming_gigs')
-    prepopulated_field = {'slug': ('name',)}
+    prepopulated_fields = {'slug': ('name',)}
 
 
 class PromoterAdmin(admin.ModelAdmin):
@@ -113,7 +113,7 @@ class PromoterAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('import_identifiers',)
     list_display = ('name', 'number_of_upcoming_gigs')
-    prepopulated_field = {'slug': ('title',)}
+    prepopulated_fields = {'slug': ('name',)}
 
 
 admin.site.register(Gig, GigAdmin)
