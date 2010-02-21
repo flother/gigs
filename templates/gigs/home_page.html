@@ -83,7 +83,7 @@
 					<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
 				</li>
 			{% endfor %}
-			<li class="more"><a href="#">View all {{ number_of_venues }} venues&nbsp;…</a></li>
+			<li class="more"><a href="{% url gigs_venue_list %}">View all {{ number_of_venues }} venues&nbsp;…</a></li>
 		</ol>
 	</div>
 	<div class="list" id="town_list">

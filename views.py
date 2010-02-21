@@ -88,3 +88,13 @@ def artist_list(request):
     }
     return render_to_response('gigs/artist_list.html', context,
         RequestContext(request))
+
+
+def venue_list(request):
+    """List all venues by name, categorised by town."""
+    town_list = Town.objects.all().select_related()
+    context = {
+        'town_list': town_list,
+    }
+    return render_to_response('gigs/venue_list.html', context,
+        RequestContext(request))

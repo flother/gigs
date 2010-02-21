@@ -1,0 +1,25 @@
+{% extends "gigs/base.html" %}
+
+{% block title %}Venues{% endblock %}
+{% block content_title %}Venues{% endblock %}
+{% block body_id %}venues{% endblock %}
+
+{% block content_intro %}
+	<p>Here you'll find every venue that's worth knowing about if music's your thing. And if it's not, what are you doing here?</p>
+{% endblock %}
+
+{% block content %}
+	{% for town in town_list %}
+		<div class="list">
+			<h2>{{ town.name }}</h2>
+			<ol>
+				{% for venue in town.venue_set.all %}
+					<li>
+						<a href="#" title="See all gigs at {{ venue }}">{{ venue.name }}</a>
+						<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+	{% endfor %}
+{% endblock %}
