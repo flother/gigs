@@ -1,0 +1,23 @@
+{% extends "gigs/base.html" %}
+
+{% block title %}Towns{% endblock %}
+{% block content_title %}Towns{% endblock %}
+{% block body_id %}towns{% endblock %}
+
+{% block content_intro %}
+	<p>Want to know where all the action takes place? Start here.</p>
+{% endblock %}
+
+{% block content %}
+	<div class="list">
+		<h2>{{ town.name }}</h2>
+		<ol>
+			{% for town in town_list %}
+				<li>
+					<a href="#" title="See all gigs in {{ town }}">{{ town }}</a>
+					<span>{{ town.number_of_upcoming_gigs }} upcoming gig{{ town.number_of_upcoming_gigs|pluralize }}</span>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+{% endblock %}
