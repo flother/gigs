@@ -265,3 +265,10 @@ class Command(NoArgsCommand):
                 db_gig.save()
                 logger.info('Gig created: %s.' % db_gig)
         logger.info('Import complete.')
+        # Finally, save every Artist, Venue, Town, and Promoter object.  This is
+        # a brute-force way of making sure every object's
+        # ``number_of_upcoming_gigs`` field is correct and up-to-date.
+        logger.debug('Saving all models to update the number of upcoming gigs.')
+        for model in [Artist, Venue, Town, Promoter]:
+            [obj.save() for obj in model.objects.all()]
+        logger.info('All model objects updated.')
