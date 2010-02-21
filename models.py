@@ -84,8 +84,7 @@ class Artist(models.Model):
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
     biography = models.TextField(blank=True)
-    photo = models.ImageField(upload_to=PHOTO_UPLOAD_DIRECTORY, blank=True,
-        null=True)
+    photo = models.ImageField(upload_to=PHOTO_UPLOAD_DIRECTORY, blank=True)
     web_site = models.URLField(blank=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -169,7 +168,7 @@ class Venue(models.Model):
     description = models.TextField(blank=True)
     address = models.CharField(max_length=128, blank=True)
     town = models.ForeignKey('Town')
-    photo = models.ImageField(upload_to='venues', blank=True, null=True)
+    photo = models.ImageField(upload_to='venues', blank=True)
     web_site = models.URLField(blank=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -212,7 +211,7 @@ class Town(models.Model):
 
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
-    photo = models.ImageField(upload_to='towns')
+    photo = models.ImageField(upload_to='towns', blank=True)
     longitude = models.IntegerField(blank=True, null=True)
     latitude = models.IntegerField(blank=True, null=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
