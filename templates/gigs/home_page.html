@@ -31,38 +31,42 @@
 			<li class="more"><a href="#">View all dates&nbsp;…</a></li>
 		</ol>
 	</div>
-	<div class="list" id="gigs_this_week">
-		<h2>Gigs this week</h2>
-		<ol>
-			{% for gig in gigs_this_week %}
-				<li class="vevent">
-					<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
-						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
-						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
-						<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
-						<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
-					</a>
-					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
-				</li>
-			{% endfor %}
-		</ol>
-	</div>
-	<div class="list" id="gigs_next_week">
-		<h2>Gigs next week</h2>
-		<ol>
-			{% for gig in gigs_next_week %}
-				<li class="vevent">
-					<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
-						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
-						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
-						<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
-						<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
-					</a>
-					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
-				</li>
-			{% endfor %}
-		</ol>
-	</div>
+	{% if gigs_this_week %}
+		<div class="list" id="gigs_this_week">
+			<h2>Gigs this week</h2>
+			<ol>
+				{% for gig in gigs_this_week %}
+					<li class="vevent">
+						<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
+							{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+							<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+							<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+							<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+						</a>
+						<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+	{% endif %}
+	{% if gigs_next_week %}
+		<div class="list" id="gigs_next_week">
+			<h2>Gigs next week</h2>
+			<ol>
+				{% for gig in gigs_next_week %}
+					<li class="vevent">
+						<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
+							{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+							<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+							<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+							<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+						</a>
+						<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+	{% endif %}
 	<div class="list" id="artist_list">
 		<h2>Browse by artist</h2>
 		<ol>
