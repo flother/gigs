@@ -126,7 +126,8 @@ There are three management commands included with this app, found in
 
 * ``import_albums``: imports albums from MusicBrainz for each artist.  Cover art
   for imported albums is also imported from Last.fm.
-* ``import_artist_photos``: imports a single photo for each artist form Last.fm.
+* ``import_artist_photos``: imports a single photo for each artist from Last.fm.
+* ``import_artist_metadata``: import a biography for each artist from Last.fm.
 * ``import_gigs_from_ripping_records``: the main management command that imports
   all gigs occurring in Edinburgh and Glasgow from the Ripping Records web site.
   This command is detailed in the section `Importing the gigs data`_ below.
