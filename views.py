@@ -26,7 +26,7 @@ def home_page(request):
     # week (Monday to Sunday), and the 15 gigs most recently added to the
     # database.
     closest_gigs = Gig.objects.published(date__gte=today,
-        sold_out=False).select_related()[:7]
+        sold_out=False).select_related()[:8]
     gigs_this_week = Gig.objects.published(date__gte=today,
         date__lt=start_of_next_week).select_related()
     gigs_next_week = Gig.objects.published(date__gte=start_of_next_week,
@@ -37,11 +37,13 @@ def home_page(request):
     # Create lists of artists and venues, those with the largest number of
     # upcoming gigs first, all towns, and the number of gigs at each venue and
     # for each artist.
-    artists = Artist.objects.all().order_by('-number_of_upcoming_gigs', '?')[:17]
+    artists = Artist.objects.filter(number_of_upcoming_gigs__gt=0).order_by(
+        '-number_of_upcoming_gigs', '?')[:17]
     number_of_artists = Artist.objects.count()
-    venues = Venue.objects.all().order_by('-number_of_upcoming_gigs')[:11]
+    venues = Venue.objects.filter(number_of_upcoming_gigs__gt=0).order_by(
+        '-number_of_upcoming_gigs')[:11]
     number_of_venues = Venue.objects.count()
-    towns = Town.objects.all()
+    towns = Town.objects.filter(number_of_upcoming_gigs__gt=0)
     number_of_towns = Town.objects.count()
 
     upcoming_months_with_gigs = Gig.objects.published(date__gte=today).dates(

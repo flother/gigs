@@ -6,7 +6,6 @@
 
 {% block body %}
 	<ol id="upcoming_gigs">
-		<li id="intro">Looking for live music this week?</li>
 		{% for gig in closest_gigs %}
 			{% thumbnail gig.artist.photo 220x147 crop="0,0" bw upscale as gig_thumb %}
 			<li class="vevent {% cycle one,two,three,four %}">
