@@ -185,6 +185,7 @@ class Venue(models.Model):
     name = models.CharField(max_length=128)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
+    description_html = models.TextField(blank=True, editable=False)
     address = models.CharField(max_length=128, blank=True)
     town = models.ForeignKey('Town')
     photo = models.ImageField(upload_to='venues', blank=True)
@@ -205,9 +206,14 @@ class Venue(models.Model):
     def save(self, force_insert=False, force_update=False,
         update_number_of_upcoming_gigs=False):
         """
-        Update the number of upcoming gigs at this venue.
+        Update the ``description_html`` and ``number_of_upcoming_gigs``
+        fields.
 
-        The update is bypassed by default but can be forced by setting the
+        Convert the plain-text ``description`` field to HTML using Markdown
+        and store it in the ``description_html`` field.
+
+        Update the number of upcoming gigs for this venue.  The update is
+        bypassed by default, but can be forced by passing setting the
         third argument, ``update_number_of_upcoming_gigs``, to ``True``.
         The implication is that this should only be updated via the
         ``import_gigs_from_ripping_records`` command.
@@ -221,6 +227,8 @@ class Venue(models.Model):
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_venues']
             except IndexError:
                 pass  # No gigs yet.
+        self.description_html = markdown(urlize(self.description,
+            trim_url_limit=40, nofollow=False))
         super(Venue, self).save(force_insert, force_update)
 
 
