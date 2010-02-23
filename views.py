@@ -2,6 +2,7 @@ import datetime
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.utils.datastructures import SortedDict
 
 from gigs.models import Gig, Artist, Venue, Town
 
@@ -75,10 +76,12 @@ def artist_list(request):
     # according to the first letter of their name.  Any band not starting with a
     # letter of the Latin alphabet is added to '#'.
     alphabet = ['#'] + map(chr, range(65, 91))
-    alphabetic_artists = dict((letter, []) for letter in alphabet)
+    alphabetic_artists = SortedDict()
+    for letter in alphabet:
+        alphabetic_artists[letter] = []
     artists = Artist.objects.all()
     for artist in artists:
-        first_letter = artist.name[0].upper()
+        first_letter = artist.slug[0].upper()
         if not first_letter in alphabet:
             first_letter = '#'
         alphabetic_artists[first_letter].append(artist)
