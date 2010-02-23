@@ -112,14 +112,19 @@ class Artist(models.Model):
         return (artist_detail, (self.slug,))
 
     def save(self, force_insert=False, force_update=False,
-        update_number_of_upcoming_gigs=True):
+        update_number_of_upcoming_gigs=False):
         """
-        Update the number of upcoming gigs for this artist.
+        Update the ``biography_html`` and ``number_of_upcoming_gigs``
+        fields.
 
-        The update can be bypassed by passing setting the third argument,
-        ``update_number_of_upcoming_gigs`` to ``False``.  This is useful
-        in the import from Ripping Records so artist objects aren't saved
-        over and over, but just once at the end.
+        Convert the plain-text ``biography`` field to HTML using Markdown
+        and store it in the ``biography_html`` field.
+
+        Update the number of upcoming gigs for this artist.  The update is
+        bypassed by default, but can be forced by passing setting the
+        third argument, ``update_number_of_upcoming_gigs``, to ``True``.
+        The implication is that this should only be updated via the
+        ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
             upcoming_gigs = Gig.objects.published(artist__id=self.id,
@@ -132,7 +137,7 @@ class Artist(models.Model):
                 pass  # No gigs yet.
         self.biography_html = markdown(urlize(self.biography, trim_url_limit=40,
             nofollow=False))
-        super(Artist, self).save(force_insert=False, force_update=False)
+        super(Artist, self).save(force_insert, force_update)
 
 
 class Album(models.Model):
@@ -198,14 +203,14 @@ class Venue(models.Model):
         return "%s, %s" % (self.name, self.town)
 
     def save(self, force_insert=False, force_update=False,
-        update_number_of_upcoming_gigs=True):
+        update_number_of_upcoming_gigs=False):
         """
         Update the number of upcoming gigs at this venue.
 
-        The update can be bypassed by passing setting the third argument,
-        ``update_number_of_upcoming_gigs`` to ``False``.  This is useful
-        in the import from Ripping Records so venue objects aren't saved
-        over and over, but just once at the end.
+        The update is bypassed by default but can be forced by setting the
+        third argument, ``update_number_of_upcoming_gigs``, to ``True``.
+        The implication is that this should only be updated via the
+        ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
             upcoming_gigs = Gig.objects.published(venue__id=self.id,
@@ -216,7 +221,7 @@ class Venue(models.Model):
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_venues']
             except IndexError:
                 pass  # No gigs yet.
-        super(Venue, self).save(force_insert=False, force_update=False)
+        super(Venue, self).save(force_insert, force_update)
 
 
 class Town(models.Model):
@@ -242,14 +247,14 @@ class Town(models.Model):
         return self.name
 
     def save(self, force_insert=False, force_update=False,
-        update_number_of_upcoming_gigs=True):
+        update_number_of_upcoming_gigs=False):
         """
         Update the number of upcoming gigs in this town.
 
-        The update can be bypassed by passing setting the third argument,
-        ``update_number_of_upcoming_gigs`` to ``False``.  This is useful
-        in the import from Ripping Records so town objects aren't saved
-        over and over, but just once at the end.
+        The update is bypassed by default but can be forced by setting the
+        third argument, ``update_number_of_upcoming_gigs``, to ``True``.
+        The implication is that this should only be updated via the
+        ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
             upcoming_gigs = Gig.objects.published(venue__town__id=self.id,
@@ -260,7 +265,7 @@ class Town(models.Model):
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_towns']
             except IndexError:
                 pass  # No gigs yet.
-        super(Town, self).save(force_insert=False, force_update=False)
+        super(Town, self).save(force_insert, force_update)
 
 
 class Promoter(models.Model):
@@ -284,14 +289,14 @@ class Promoter(models.Model):
         return self.name
 
     def save(self, force_insert=False, force_update=False,
-        update_number_of_upcoming_gigs=True):
+        update_number_of_upcoming_gigs=False):
         """
         Update the number of upcoming gigs for this promoters.
 
-        The update can be bypassed by passing setting the third argument,
-        ``update_number_of_upcoming_gigs`` to ``False``.  This is useful
-        in the import from Ripping Records so promoter objects aren't
-        saved over and over, but just once at the end.
+        The update is bypassed by default but can be forced by setting
+        the third argument, ``update_number_of_upcoming_gigs``, to ``True``.
+        The implication is that this should only be updated via the
+        ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
             upcoming_gigs = Gig.objects.published(promoter__id=self.id,
@@ -302,4 +307,4 @@ class Promoter(models.Model):
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_promoters']
             except IndexError:
                 pass  # No gigs yet.
-        super(Promoter, self).save(force_insert=False, force_update=False)
+        super(Promoter, self).save(force_insert, force_update)

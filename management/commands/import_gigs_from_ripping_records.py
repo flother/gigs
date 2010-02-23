@@ -270,5 +270,6 @@ class Command(NoArgsCommand):
         # ``number_of_upcoming_gigs`` field is correct and up-to-date.
         logger.debug('Saving all models to update the number of upcoming gigs.')
         for model in [Artist, Venue, Town, Promoter]:
-            [obj.save() for obj in model.objects.all()]
+            for obj in model.objects.all():
+                obj.save(update_number_of_upcoming_gigs=True)
         logger.info('All model objects updated.')
