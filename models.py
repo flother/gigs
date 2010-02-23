@@ -74,6 +74,10 @@ class Gig(models.Model):
     def __unicode__(self):
         return "%s at %s on %s" % (self.artist, self.venue, self.date)
 
+    def is_finished(self):
+        """Return True if the gig date has passed, False otherwise."""
+        return self.date < datetime.date.today()
+
 
 class Artist(models.Model):
 
