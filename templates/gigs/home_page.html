@@ -72,7 +72,7 @@
 		<ol>
 			{% for artist in artists %}
 				<li>
-					<a href="#" title="See all gigs for {{ artist.name }}">{{ artist.name }}</a>
+					<a href="{{ artist.get_absolute_url }}" title="See all gigs for {{ artist.name }}">{{ artist.name }}</a>
 				</li>
 			{% endfor %}
 			<li class="more"><a href="{% url gigs_artist_list %}">View all {{ number_of_artists }} artists&nbsp;…</a></li>

@@ -1,6 +1,6 @@
 import datetime
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 from gigs.models import Gig, Artist, Venue, Town
@@ -87,6 +87,21 @@ def artist_list(request):
         'artist_count': len(artists),
     }
     return render_to_response('gigs/artist_list.html', context,
+        RequestContext(request))
+
+
+def artist_detail(request, slug):
+    today = datetime.date.today()
+    artist = get_object_or_404(Artist, slug=slug)
+    upcoming_gigs = Gig.objects.published(date__gte=today)
+    past_gigs = Gig.objects.published(date__lt=today)
+
+    context = {
+        'artist': artist,
+        'upcoming_gigs': upcoming_gigs,
+        'past_gigs': past_gigs,
+    }
+    return render_to_response('gigs/artist_detail.html', context,
         RequestContext(request))
 
 

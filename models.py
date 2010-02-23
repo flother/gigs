@@ -1,7 +1,9 @@
 import datetime
 
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, permalink
+from django.utils.html import urlize
+from markdown import markdown
 
 from gigs.managers import PublishedManager
 
@@ -88,6 +90,7 @@ class Artist(models.Model):
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
     biography = models.TextField(blank=True)
+    biography_html = models.TextField(blank=True, editable=False)
     photo = models.ImageField(upload_to=PHOTO_UPLOAD_DIRECTORY, blank=True)
     web_site = models.URLField(blank=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
@@ -102,6 +105,11 @@ class Artist(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    @permalink
+    def get_absolute_url(self):
+        from gigs.views import artist_detail
+        return (artist_detail, (self.slug,))
 
     def save(self, force_insert=False, force_update=False,
         update_number_of_upcoming_gigs=True):
@@ -122,6 +130,8 @@ class Artist(models.Model):
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_artists']
             except IndexError:
                 pass  # No gigs yet.
+        self.biography_html = markdown(urlize(self.biography, trim_url_limit=40,
+            nofollow=False))
         super(Artist, self).save(force_insert=False, force_update=False)
 
 

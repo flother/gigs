@@ -20,6 +20,8 @@ promoter_list_dict = {
 urlpatterns = patterns('',
     url(r'^$', views.home_page, name='gigs_home_page'),
     url(r'^artists/$', views.artist_list, name='gigs_artist_list'),
+    url(r'^artists/(?P<slug>.+)/$', views.artist_detail,
+        name='gigs_artist_detail'),
     url(r'^venues/$', views.venue_list, name='gigs_venue_list'),
     url(r'^towns/$', object_list, town_list_dict, name='gigs_town_list'),
     url(r'^promoters/$', object_list, promoter_list_dict,

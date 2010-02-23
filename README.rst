@@ -41,6 +41,7 @@ Requirements
 * Python 2.5
 * Django 1.1 or greater (tested with the Subversion trunk)
 * sorl-thumbnail: http://sorl-thumbnail.googlecode.com/
+* Markdown: http://www.freewisdom.org/projects/python-markdown/
 
 Optional libraries
 ====================
@@ -83,6 +84,13 @@ If you intend to use the ``import_artist_photos`` management command you'll need
 to include your Last.fm API key in your Django project's settings::
 
   LASTFM_API_KEY = 'YOUR_API_KEY_HERE'
+
+If you use the ``import_albums`` management command (detailed below), each
+artist's page will include links to their albums on Amazon.  If you want these
+links to include your Amazon affiliate tag, include the following setting in
+your project's settings file::
+
+  AMAZON_AFFILIATE_TAG = 'your-affiliate-link'
 
 And finally run ``django-admin.py syncdb`` to create the database tables.
 
