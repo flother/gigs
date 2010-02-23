@@ -5,9 +5,13 @@
 
 The ``gigs`` package is a standalone Django app that transforms gigs listed on
 the `web site of the Edinburgh institution Ripping Records`_ and into a set of
-database models: ``Gig``, ``Artist``, ``Venue``, ``Town``, and ``Promoter``.
+database models: ``Gig``, ``Artist``, ``Album``, ``Venue``, ``Town``, and
+``Promoter``.
 
 .. _web site of the Edinburgh institution Ripping Records: http://www.rippingrecords.com/tickets01.html
+
+
+.. contents::
 
 
 How the screen scraping works
@@ -112,6 +116,20 @@ be available.  You must define the following:
   ``body`` element
 * ``content_intro``: a block immediately before the content ``block``
 * ``content``: the content of the page; a block within the ``body`` block
+
+
+Management commands
+=====================
+
+There are three management commands included with this app, found in
+``gigs.management.commands`` and available to use via ``django-admin.py``.
+
+* ``import_albums``: imports albums from MusicBrainz for each artist.  Cover art
+  for imported albums is also imported from Last.fm.
+* ``import_artist_photos``: imports a single photo for each artist form Last.fm.
+* ``import_gigs_from_ripping_records``: the main management command that imports
+  all gigs occurring in Edinburgh and Glasgow from the Ripping Records web site.
+  This command is detailed in the section `Importing the gigs data`_ below.
 
 
 Importing the gigs data
