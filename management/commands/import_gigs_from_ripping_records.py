@@ -31,7 +31,7 @@ VENUE_AND_PROMOTER_RE = re.compile(
 PRICE_RE = re.compile(
     r"^\??(?P<price>\d{1,}\.\d{2})?"  # Price.
     r"(/\?\d{1,}\.\d{2})?"  # Second price; this is discarded.
-    r" ?(?P<sold_out>SOLD OUT)?"  # "SOLD OUT".
+    r" ?(?P<status>SOLD OUT|CANCELLED)?"  # "SOLD OUT" or "CANCELLED".
     r" ?(?P<info>.+?)?$"  # Extra information.
 )
 
@@ -76,10 +76,15 @@ class RippedGig(object):
             price_and_info))
         self.price = price_and_info_match.group('price')
         self.info = price_and_info_match.group('info')
-        if price_and_info_match.group('sold_out'):
+        if price_and_info_match.group('status') == "SOLD OUT":
             self.sold_out = True
+            self.cancelled = False
+        elif price_and_info_match.group('status') == "CANCELLED":
+            self.cancelled = True
+            self.sold_out = False
         else:
             self.sold_out = False
+            self.cancelled = False
 
     def __unicode__(self):
         return "%s at %s on %s" % (self.artist, self.venue, self.date)
@@ -251,16 +256,20 @@ class Command(NoArgsCommand):
                 db_gig = gig_id.gig_set.all()[0]
                 logger.debug('Gig already exists.')
                 # If the gig already exists make sure it's marked appropriately
-                # as sold out or not.
+                # as sold out, cancelled, or not.
                 if not db_gig.sold_out == gig.sold_out:
                     db_gig.sold_out = gig.sold_out
                     db_gig.save()
                     logger.debug("Updated the gig's sold out flag.")
+                if not db_gig.cancelled == gig.cancelled:
+                    db_gig.cancelled = gig.cancelled
+                    db_gig.save()
+                    logger.debug("Updated the gig's cancelled flag.")
             except IndexError:
                 db_gig = Gig.objects.create(artist=artist, slug=artist.slug,
                     venue=venue, promoter=promoter, date=gig.date,
                     price=gig.price, sold_out=gig.sold_out,
-                    extra_information=gig.info)
+                    cancelled=gig.cancelled, extra_information=gig.info)
                 db_gig.import_identifiers.add(gig_id)
                 db_gig.save()
                 logger.info('Gig created: %s.' % db_gig)

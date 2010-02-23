@@ -59,6 +59,7 @@ class Gig(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=True,
         null=True)
     sold_out = models.BooleanField(default=False)
+    cancelled = models.BooleanField(default=False)
     extra_information = models.TextField(blank=True, null=True)
     published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)

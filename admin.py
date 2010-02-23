@@ -12,7 +12,8 @@ class GigAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('slug', ('artist', 'venue', 'promoter'), 'date',
-                ('price', 'sold_out'), 'extra_information', 'published')
+                ('price', 'sold_out', 'cancelled'), 'extra_information',
+                'published')
         }),
         ('Import options', {
             'classes': ('collapse',),
@@ -21,8 +22,8 @@ class GigAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('import_identifiers',)
     list_display = ('artist', 'venue', 'promoter', 'date', 'price', 'sold_out',
-        'published')
-    list_filter = ('sold_out', 'published', 'venue', 'promoter')
+        'cancelled', 'published')
+    list_filter = ('sold_out', 'cancelled', 'published', 'venue', 'promoter')
     prepopulated_fields = {'slug': ('artist',)}
     search_fields = ('artist__name',)
 
