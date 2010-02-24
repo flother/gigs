@@ -52,6 +52,7 @@ Optional libraries
 
 * pylast 0.4: http://pylast.googlecode.com/
 * musicbrainz2 0.7.0: http://musicbrainz.org/doc/PythonMusicBrainz2
+* Haystack 1.0.1: http://haystacksearch.org/
 
 There's a management command, ``import_artist_photos``, that attempts to find
 and download a photo for each artist that doesn't yet have one.  It's entirely
@@ -63,6 +64,14 @@ releases for each artist in the database from MusicBrainz.  It also attempts to
 find the cover art for the imported albums from Last.fm.  Again, it's entirely
 you choice whether you use it or not, but if you do you'll need both ``pylast``
 and ``musicbrainz2`` installed.
+
+The ``action`` element on the home page's search form links to
+``{% url haystack_search %}``, and Haystack search indexes are included in
+``gigs.search_indexes``.  If you want to use Haystack, follow the
+`installation instructions`_ in the Haystack documentation.  If you don't,
+modify or remove the search form from the home page.
+
+.. _installation instructions: http://haystacksearch.org/docs/tutorial.html
 
 
 How to install the app
