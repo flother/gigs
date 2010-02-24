@@ -42,6 +42,7 @@ class Command(NoArgsCommand):
         logger_formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
         logger_handler.setFormatter(logger_formatter)
         logger.addHandler(logger_handler)
+        logger.info('Importing albums.')
 
         # Make sure the musicbrainz2 module is available.
         try:

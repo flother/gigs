@@ -36,6 +36,7 @@ class Command(NoArgsCommand):
         logger_formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
         logger_handler.setFormatter(logger_formatter)
         logger.addHandler(logger_handler)
+        logger.info('Importing artist photos.')
 
         # Make sure the pylast module is available.
         try:

@@ -122,6 +122,7 @@ class Command(NoArgsCommand):
         logger_formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
         logger_handler.setFormatter(logger_formatter)
         logger.addHandler(logger_handler)
+        logger.info('Importing gigs from the Ripping Records spreadsheet.')
 
         # Get the CSV data from Google Docs.
         logger.debug('Retrieving data from Google Docs.')
