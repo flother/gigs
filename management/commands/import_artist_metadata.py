@@ -63,20 +63,17 @@ class Command(BaseCommand):
             lastfm = pylast.get_lastfm_network(api_key=settings.LASTFM_API_KEY)
             lastfm_artist = lastfm.get_artist(artist.name)
             try:
-                # Get the biography and the date it was published from Last.fm.
+                # Get the biography from Last.fm.
                 biography = lastfm_artist.get_bio_content()
                 bio_published_date = lastfm_artist.get_bio_published_date()
                 if bio_published_date:
-                    date_biography_updated = datetime.datetime(*time.strptime(
-                        bio_published_date, "%a, %d %b %Y %H:%M:%S +0000")[:6])
                     plain_text_biography = strip_tags(biography)
-                    # If the Last.fm biography has been updated since this
-                    # artist was last saved, and the biography is different to
-                    # the saved version, OR the artist biography is blank, save
-                    # the artist's biography.
-                    if ((not plain_text_biography == artist.biography) and
-                            (date_biography_updated > artist.updated or
-                            artist.biography == '')):
+                    # If the biography is different to the saved version or the
+                    # artist biography is blank, save the artist's biography.
+                    # Note this will overwrite any changes that have been made
+                    # to the biography via the admin.
+                    if (not plain_text_biography == artist.biography and
+                            artist.biography == ''):
                         artist.biography = plain_text_biography
                         artist.save()
                         logger.info("Saved biography for %s" % artist.name)
