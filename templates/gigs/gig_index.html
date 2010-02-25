@@ -1,0 +1,46 @@
+{% extends "gigs/base.html" %}
+{% load thumbnail %}
+
+{% block title %}Gigs by date{% endblock %}
+{% block content_title %}Gigs{% endblock %}
+{% block body_id %}gigs{% endblock %}
+
+{% block content_intro %}
+	<p>Every gig, past and present, that we know of in Edinburgh and Glasgow. To stay up-to-date you should <a href="http://twitter.com/rippedr">follow Ripped Records on Twitter</a>.</p>
+{% endblock %}
+
+{% block content %}
+	{% regroup months_with_gigs by date|date:"Y" as months_with_gigs_by_year %}
+	{% for year in months_with_gigs_by_year %}
+		<div class="list">
+			<h2>{{ year.grouper }}</h2>
+			<ol>
+				{% for month in year.list %}
+					<li>
+						<a href="#" title="View all gigs in {{ month.date|date:"F Y" }}">{{ month.date|date:"F" }}</a>
+					</li>
+				{% endfor %}
+				<li class="more"><a href="">All gigs in {{ year.grouper }} …</a></li>
+			</ol>
+		</div>
+	{% endfor %}
+	{% regroup upcoming_gigs by date|date:"Y m" as upcoming_gigs_by_month %}
+	{% for month in upcoming_gigs_by_month %}
+		<div class="list">
+			<h2>{{ month.list.0.date|date:"F Y" }}</h2>
+			<ol>
+				{% for gig in month.list %}
+					<li class="vevent">
+						<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
+							{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+							<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+							<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+							<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+						</a>
+						<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+	{% endfor %}
+{% endblock %}

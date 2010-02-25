@@ -67,6 +67,22 @@ def home_page(request):
         RequestContext(request))
 
 
+def gigs_index(request):
+    """
+    List all upcoming gigs, soonest first, and a list of months (by year) that
+    gigs have or will occur in.
+    """
+    months_with_gigs = Gig.objects.published().order_by('-date').dates('date',
+        'month')
+    upcoming_gigs = Gig.objects.published(date__gte=datetime.date.today())
+    context = {
+        'months_with_gigs': months_with_gigs,
+        'upcoming_gigs': upcoming_gigs,
+    }
+    return render_to_response('gigs/gig_index.html', context,
+        RequestContext(request))
+
+
 def artist_list(request):
     """List all artists by name."""
     earliest_gig = Gig.objects.published()[0]
