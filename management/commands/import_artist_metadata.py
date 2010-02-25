@@ -1,11 +1,12 @@
 import datetime
 import logging
+from optparse import make_option
 import sys
 import time
 import urllib2
 
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.utils.html import strip_tags
 import pylast
 
@@ -15,10 +16,15 @@ from gigs.models import Artist
 LOGGING_VERBOSITY = {0: logging.CRITICAL, 1: logging.INFO, 2: logging.DEBUG}
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = "Import metadata (currently just biographies) for all artists."
+    base_options = (
+        make_option('-a', '--age', action='store', default=0, type='int',
+            help='Import metadata only for those artists created within this time period (in hours). Default is all artists.'),
+    )
+    option_list = BaseCommand.option_list + base_options
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         """
         Import artist metadata from Last.fm.
 
@@ -42,8 +48,16 @@ class Command(NoArgsCommand):
             logger.critical('You need to install the pylast module.')
             sys.exit(1)
 
+        # Find the age limit for artists.
+        age = options.get('age', 0)
+        earliest_date = datetime.datetime.now() - datetime.timedelta(hours=age)
+        # Obey a maximum age for artists if set.
+        artists = Artist.objects.all()
+        if age:
+            artists = artists.filter(created__gte=earliest_date)
         # Loop through each artist.
-        for artist in Artist.objects.all():
+        for artist in artists:
+            time.sleep(1)  # Be nice to Last.fm.
             logger.debug('Searching for metadata for %s.' % artist.name)
             # Open a connection to the Last.fm API.
             lastfm = pylast.get_lastfm_network(api_key=settings.LASTFM_API_KEY)

@@ -1,12 +1,13 @@
 import datetime
 import logging
+from optparse import make_option
 import os
 import sys
 import time
 import urllib2
 
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 try:
     from musicbrainz2.webservice import Query, ReleaseFilter, Release
@@ -24,10 +25,15 @@ from gigs.models import Artist, Album
 LOGGING_VERBOSITY = {0: logging.CRITICAL, 1: logging.INFO, 2: logging.DEBUG}
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = "Imports albums from MusicBrainz for all the artists in the database."
+    base_options = (
+        make_option('-a', '--age', action='store', default=0, type='int',
+            help='Import albums only for those artists created within this time period (in hours). Default is all artists.'),
+    )
+    option_list = BaseCommand.option_list + base_options
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         """
         Import any albums held in the MusicBrainz database for each artist
         in the database.  Only albums with an Amazon ASIN are imported, to
@@ -57,8 +63,14 @@ class Command(NoArgsCommand):
             logger.critical('You need to install the pylast module.')
             sys.exit(1)
 
-        query = Query()
+        # Find the age limit for artists.
+        age = options.get('age', 0)
+        earliest_date = datetime.datetime.now() - datetime.timedelta(hours=age)
+        # Obey a maximum age for artists if set.
         artists = Artist.objects.all()
+        if age:
+            artists = artists.filter(created__gte=earliest_date)
+        query = Query()
         for artist in artists:
             time.sleep(1)  # Be nice to MusicBrainz.
             logger.debug('Searching for albums by %s.' % artist.name)

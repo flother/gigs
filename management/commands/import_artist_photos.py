@@ -1,10 +1,13 @@
+import datetime
 import logging
+from optparse import make_option
 import os
 import sys
+import time
 import urllib2
 
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 try:
     import pylast
 except ImportError:
@@ -16,10 +19,15 @@ from gigs.models import Artist
 LOGGING_VERBOSITY = {0: logging.CRITICAL, 1: logging.INFO, 2: logging.DEBUG}
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = "Attempt to find a photo, via the Last.fm API, for each artist without one."
+    base_options = (
+        make_option('-a', '--age', action='store', default=0, type='int',
+            help='Import photos only for those artists created within this time period (in hours). Default is all artists.'),
+    )
+    option_list = BaseCommand.option_list + base_options
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         """
         Attempt to find a photo for each Artist model object without one.
         The Last.fm API is used to find the primary image for each artist
@@ -47,10 +55,17 @@ class Command(NoArgsCommand):
 
         # Create a connection to the Last.fm API.
         lastfm = pylast.get_lastfm_network(api_key=settings.LASTFM_API_KEY)
+        # Find the age limit for artists.
+        age = options.get('age', 0)
+        earliest_date = datetime.datetime.now() - datetime.timedelta(hours=age)
+        # Obey a maximum age for artists if set.
+        artists = Artist.objects.filter(photo='')
+        if age:
+            artists = artists.filter(created__gte=earliest_date)
         # Make a call to the API for an image for each artist that doesn't yet
         # have a photo.
-        artists = Artist.objects.filter(photo='')
         for artist in artists:
+            time.sleep(1)  # Be nice to Last.fm.
             logger.debug("Searching for a photo for %s ..." % artist.name)
             try:
                 lastfm_artist = lastfm.get_artist(artist.name)
