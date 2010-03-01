@@ -1,9 +1,11 @@
 import datetime
+import hashlib
 import logging
 from optparse import make_option
 import os
 import sys
 import time
+import unicodedata
 import urllib2
 
 from django.conf import settings
@@ -125,8 +127,10 @@ class Command(BaseCommand):
                         # Try and find the cover art on Last.fm.
                         logger.debug('Looking for cover art for %s ...' %
                             db_album.title)
-                        album_slug = slugify(' '.join([artist.name,
-                            db_album.title]))
+                        album_id = unicodedata.normalize('NFKD', unicode(
+                            ' '.join([artist.name, db_album.title]))).encode(
+                            'ascii', 'ignore')
+                        album_hash = hashlib.sha1(album_id).hexdigest()
                         lastfm = pylast.get_lastfm_network(
                             api_key=settings.LASTFM_API_KEY)
                         lastfm_album = lastfm.get_album(artist.name,
@@ -140,7 +144,7 @@ class Command(BaseCommand):
                             logger.debug('Saving photo to disk ...')
                             filename = os.path.join(settings.MEDIA_ROOT,
                                 Album.PHOTO_UPLOAD_DIRECTORY,
-                                '%s.jpg' % album_slug)
+                                '%s.jpg' % album_hash)
                             fh = open(filename, 'w')
                             fh.write(data)
                             fh.close()
@@ -150,7 +154,7 @@ class Command(BaseCommand):
                                 % (db_album.title, artist.name))
                             db_album.cover_art = os.path.join(
                                 Album.PHOTO_UPLOAD_DIRECTORY,
-                                '%s.jpg' % album_slug)
+                                '%s.jpg' % album_hash)
                         except (pylast.WSError, AttributeError):
                             logger.debug('No cover art found.')
                         except urllib2.HTTPError:
