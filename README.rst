@@ -43,7 +43,7 @@ Requirements
 ==============
 
 * Python 2.5
-* Django 1.1 or greater (tested with the Subversion trunk)
+* Django 1.1.1
 * sorl-thumbnail: http://sorl-thumbnail.googlecode.com/
 * Markdown: http://www.freewisdom.org/projects/python-markdown/
 
