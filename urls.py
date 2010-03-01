@@ -1,8 +1,14 @@
 from django.conf.urls.defaults import patterns, url
 from django.views.generic.list_detail import object_list
 
+from gigs.feeds import LatestGigs
 from gigs.models import Town, Promoter
 from gigs import views
+
+
+feeds = {
+    'latest-gigs': LatestGigs,
+}
 
 
 town_list_dict = {
@@ -27,4 +33,6 @@ urlpatterns = patterns('',
     url(r'^towns/$', object_list, town_list_dict, name='gigs_town_list'),
     url(r'^promoters/$', object_list, promoter_list_dict,
         name='gigs_promoter_list'),
+    url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
+        {'feed_dict': feeds}, name='gigs_feeds'),
 )
