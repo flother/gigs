@@ -24,6 +24,7 @@ class GigAdmin(admin.ModelAdmin):
     list_display = ('artist', 'venue', 'promoter', 'date', 'price', 'sold_out',
         'cancelled', 'published')
     list_filter = ('sold_out', 'cancelled', 'published', 'venue', 'promoter')
+    list_select_related = True
     prepopulated_fields = {'slug': ('artist',)}
     search_fields = ('artist__name',)
 
@@ -55,6 +56,7 @@ class AlbumAdmin(admin.ModelAdmin):
     date_hierarchy = 'release_date'
     list_display = ('title', 'artist', 'release_date', 'asin', 'published')
     list_filter = ('published', 'artist')
+    list_select_related = True
     search_fields = ('title',)
 
 
@@ -76,6 +78,7 @@ class VenueAdmin(admin.ModelAdmin):
     filter_horizontal = ('import_identifiers',)
     list_display = ('name', 'town', 'number_of_upcoming_gigs')
     list_filter = ('town',)
+    list_select_related = True
     prepopulated_fields = {'slug': ('name',)}
 
 
