@@ -18,13 +18,6 @@ class LatestGigs(Feed):
         return reverse('django.contrib.syndication.views.feed',
             args=('latest-gigs',))
 
-    def item_link(self):
-        """
-        Return an individual item's link.  Currently not implemented while
-        the ``Gig`` model is missing a ``get_absolute_url()`` method.
-        """
-        return '/'
-
     def items(self):
         """Return the ten most recently created gigs."""
         return Gig.objects.published().order_by('-created').select_related()[:10]

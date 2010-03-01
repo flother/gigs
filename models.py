@@ -77,6 +77,18 @@ class Gig(models.Model):
     def __unicode__(self):
         return "%s at %s on %s" % (self.artist, self.venue, self.date)
 
+    @permalink
+    def get_absolute_url(self):
+        """Return the absolute URL for a gig."""
+        from gigs.views import gig_detail
+        kwargs = {
+            'year': self.date.strftime('%Y'),
+            'month': self.date.strftime('%m'),
+            'day': self.date.strftime('%d'),
+            'slug': self.slug,
+        }
+        return (gig_detail, None, kwargs)
+
     def is_finished(self):
         """Return True if the gig date has passed, False otherwise."""
         return self.date < datetime.date.today()
@@ -109,6 +121,7 @@ class Artist(models.Model):
 
     @permalink
     def get_absolute_url(self):
+        """Return the absolute URL for an artist."""
         from gigs.views import artist_detail
         return (artist_detail, (self.slug,))
 

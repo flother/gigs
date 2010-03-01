@@ -1,0 +1,10 @@
+{% extends "gigs/base.html" %}
+{% load thumbnail %}
+
+{% block title %}{{ gig.artist.name }} at {{ gig.venue }} on {{ gig.date|date }}.</p>{% endblock %}
+{% block content_title %}{{ gig.artist.name }}{% endblock %}
+{% block body_id %}gig{% endblock %}
+
+{% block content_intro %}
+	<p>{{ gig.venue }}, {{ gig.date|date:"l jS F Y" }}.</p>
+{% endblock %}

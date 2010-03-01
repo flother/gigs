@@ -83,6 +83,17 @@ def gigs_index(request):
         RequestContext(request))
 
 
+def gig_detail(request, year, month, day, slug):
+    """Display the details of one particular gig."""
+    gig_date = datetime.date(*map(int, [year, month, day]))
+    gig = get_object_or_404(Gig.objects.published(), date=gig_date, slug=slug)
+    context = {
+        'gig': gig,
+    }
+    return render_to_response('gigs/gig_detail.html', context,
+        RequestContext(request))
+
+
 def artist_list(request):
     """List all artists by name."""
     earliest_gig = Gig.objects.published()[0]
@@ -112,6 +123,7 @@ def artist_list(request):
 
 
 def artist_detail(request, slug):
+    """Display the details of one particular artist."""
     today = datetime.date.today()
     artist = get_object_or_404(Artist, slug=slug)
     upcoming_gigs = Gig.objects.published(date__gte=today)

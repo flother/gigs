@@ -31,7 +31,7 @@
 			<ol>
 				{% for gig in month.list %}
 					<li class="vevent">
-						<a class="url" href="#" title="{{ gig.artist }} at {{ gig.venue }}">
+						<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
 							{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
 							<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
 							<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
