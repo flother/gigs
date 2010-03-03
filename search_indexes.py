@@ -19,11 +19,19 @@ class ArtistIndex(indexes.SearchIndex):
     text = indexes.CharField(document=True, use_template=True)
     rendered = indexes.CharField(use_template=True, indexed=False)
 
+    def get_queryset(self):
+        """Ensure Haystack indexes only published artists."""
+        return Artist.objects.published()
+
 
 class VenueIndex(indexes.SearchIndex):
     """Haystack search index for ``gigs.models.Venue``."""
     text = indexes.CharField(document=True, use_template=True)
     rendered = indexes.CharField(use_template=True, indexed=False)
+
+    def get_queryset(self):
+        """Ensure Haystack indexes only published venues."""
+        return Venue.objects.published()
 
 
 site.register(Gig, GigIndex)

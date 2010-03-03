@@ -107,10 +107,13 @@ class Artist(models.Model):
     photo = models.ImageField(upload_to=PHOTO_UPLOAD_DIRECTORY, blank=True)
     web_site = models.URLField(blank=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
+    published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
     import_identifiers = models.ManyToManyField('ImportIdentifier',
         limit_choices_to={'type': ImportIdentifier.ARTIST_IMPORT_TYPE})
+
+    objects = PublishedManager()
 
     class Meta:
         get_latest_by = 'created'
@@ -205,10 +208,13 @@ class Venue(models.Model):
     photo = models.ImageField(upload_to='venues', blank=True)
     web_site = models.URLField(blank=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
+    published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
     import_identifiers = models.ManyToManyField('ImportIdentifier',
         limit_choices_to={'type': ImportIdentifier.VENUE_IMPORT_TYPE})
+
+    objects = PublishedManager()
 
     class Meta:
         get_latest_by = 'created'
@@ -256,10 +262,13 @@ class Town(models.Model):
     longitude = models.IntegerField(blank=True, null=True)
     latitude = models.IntegerField(blank=True, null=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
+    published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
     import_identifiers = models.ManyToManyField('ImportIdentifier',
         limit_choices_to={'type': ImportIdentifier.TOWN_IMPORT_TYPE})
+
+    objects = PublishedManager()
 
     class Meta:
         get_latest_by = 'created'
@@ -298,10 +307,13 @@ class Promoter(models.Model):
     slug = models.SlugField(unique=True)
     web_site = models.URLField(blank=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
+    published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
     import_identifiers = models.ManyToManyField('ImportIdentifier',
         limit_choices_to={'type': ImportIdentifier.PROMOTER_IMPORT_TYPE})
+
+    objects = PublishedManager()
 
     class Meta:
         get_latest_by = 'created'

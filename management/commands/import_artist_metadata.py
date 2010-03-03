@@ -52,7 +52,7 @@ class Command(BaseCommand):
         age = options.get('age', 0)
         earliest_date = datetime.datetime.now() - datetime.timedelta(hours=age)
         # Obey a maximum age for artists if set.
-        artists = Artist.objects.all()
+        artists = Artist.objects.published()
         if age:
             artists = artists.filter(created__gte=earliest_date)
         # Loop through each artist.

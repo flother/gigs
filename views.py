@@ -38,13 +38,13 @@ def home_page(request):
     # Create lists of artists and venues, those with the largest number of
     # upcoming gigs first, all towns, and the number of gigs at each venue and
     # for each artist.
-    artists = Artist.objects.filter(number_of_upcoming_gigs__gt=0).order_by(
+    artists = Artist.objects.published(number_of_upcoming_gigs__gt=0).order_by(
         '-number_of_upcoming_gigs', '?')[:17]
     number_of_artists = Artist.objects.count()
-    venues = Venue.objects.filter(number_of_upcoming_gigs__gt=0).order_by(
+    venues = Venue.objects.published(number_of_upcoming_gigs__gt=0).order_by(
         '-number_of_upcoming_gigs')[:11]
     number_of_venues = Venue.objects.count()
-    towns = Town.objects.filter(number_of_upcoming_gigs__gt=0)
+    towns = Town.objects.published(number_of_upcoming_gigs__gt=0)
     number_of_towns = Town.objects.count()
 
     upcoming_months_with_gigs = Gig.objects.published(date__gte=today).dates(
@@ -106,7 +106,7 @@ def artist_list(request):
     alphabetic_artists = SortedDict()
     for letter in alphabet:
         alphabetic_artists[letter] = []
-    artists = Artist.objects.all()
+    artists = Artist.objects.published()
     for artist in artists:
         first_letter = artist.slug[0].upper()
         if not first_letter in alphabet:
@@ -124,7 +124,7 @@ def artist_list(request):
 def artist_detail(request, slug):
     """Display the details of one particular artist."""
     today = datetime.date.today()
-    artist = get_object_or_404(Artist, slug=slug)
+    artist = get_object_or_404(Artist.objects.published(), slug=slug)
     upcoming_gigs = Gig.objects.published(date__gte=today).select_related()
     past_gigs = Gig.objects.published(date__lt=today).select_related()
 
@@ -139,7 +139,7 @@ def artist_detail(request, slug):
 
 def venue_list(request):
     """List all venues by name, categorised by town."""
-    town_list = Town.objects.all().select_related()
+    town_list = Town.objects.published().select_related()
     context = {
         'town_list': town_list,
     }

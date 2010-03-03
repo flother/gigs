@@ -12,12 +12,12 @@ feeds = {
 
 
 town_list_dict = {
-    'queryset': Town.objects.all(),
+    'queryset': Town.objects.published(),
     'allow_empty': True,
     'template_object_name': 'town',
 }
 promoter_list_dict = {
-    'queryset': Promoter.objects.all(),
+    'queryset': Promoter.objects.published(),
     'allow_empty': True,
     'template_object_name': 'promoter',
 }

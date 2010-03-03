@@ -36,7 +36,8 @@ class ArtistAdmin(admin.ModelAdmin):
     date_hierarchy = 'updated'
     fieldsets = (
         (None, {
-            'fields': ('name', 'slug', 'biography', 'photo', 'web_site')
+            'fields': ('name', 'slug', 'biography', 'photo', 'web_site',
+                'published')
         }),
         ('Import options', {
             'classes': ('collapse',),
@@ -44,7 +45,8 @@ class ArtistAdmin(admin.ModelAdmin):
         }),
     )
     filter_horizontal = ('import_identifiers',)
-    list_display = ('name', 'number_of_upcoming_gigs')
+    list_display = ('name', 'number_of_upcoming_gigs', 'published')
+    list_filter = ('published',)
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
 
@@ -68,7 +70,7 @@ class VenueAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('name', 'slug', 'description', 'address', 'town',
-                'photo', 'web_site')
+                'photo', 'web_site', 'published')
         }),
         ('Import options', {
             'classes': ('collapse',),
@@ -76,8 +78,8 @@ class VenueAdmin(admin.ModelAdmin):
         }),
     )
     filter_horizontal = ('import_identifiers',)
-    list_display = ('name', 'town', 'number_of_upcoming_gigs')
-    list_filter = ('town',)
+    list_display = ('name', 'town', 'number_of_upcoming_gigs', 'published')
+    list_filter = ('published', 'town',)
     list_select_related = True
     prepopulated_fields = {'slug': ('name',)}
 
@@ -89,7 +91,8 @@ class TownAdmin(admin.ModelAdmin):
     date_hierarchy = 'updated'
     fieldsets = (
         (None, {
-            'fields': ('name', 'slug', 'photo', 'longitude', 'latitude')
+            'fields': ('name', 'slug', 'photo', 'longitude', 'latitude',
+                'published')
         }),
         ('Import options', {
             'classes': ('collapse',),
@@ -97,7 +100,8 @@ class TownAdmin(admin.ModelAdmin):
         }),
     )
     filter_horizontal = ('import_identifiers',)
-    list_display = ('name', 'number_of_upcoming_gigs')
+    list_display = ('name', 'number_of_upcoming_gigs', 'published')
+    list_filter = ('published',)
     prepopulated_fields = {'slug': ('name',)}
 
 
@@ -108,7 +112,7 @@ class PromoterAdmin(admin.ModelAdmin):
     date_hierarchy = 'updated'
     fieldsets = (
         (None, {
-            'fields': ('name', 'slug', 'web_site')
+            'fields': ('name', 'slug', 'web_site', 'published')
         }),
         ('Import options', {
             'classes': ('collapse',),
@@ -117,6 +121,7 @@ class PromoterAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('import_identifiers',)
     list_display = ('name', 'number_of_upcoming_gigs')
+    list_filter = ('published',)
     prepopulated_fields = {'slug': ('name',)}
 
 
