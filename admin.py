@@ -25,6 +25,7 @@ class GigAdmin(admin.ModelAdmin):
         'cancelled', 'published')
     list_filter = ('sold_out', 'cancelled', 'published', 'venue', 'promoter')
     list_select_related = True
+    ordering = ('-date', 'artist__slug')
     prepopulated_fields = {'slug': ('artist',)}
     search_fields = ('artist__name',)
 

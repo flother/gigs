@@ -71,7 +71,7 @@ class Gig(models.Model):
 
     class Meta:
         get_latest_by = 'created'
-        ordering = ('-date', 'artist__slug')
+        ordering = ('date', 'artist__slug')
         unique_together = (('artist', 'venue', 'date'),)
 
     def __unicode__(self):
