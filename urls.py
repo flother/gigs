@@ -34,6 +34,9 @@ urlpatterns = patterns('',
         'template_object_name': 'artist'}, name='gigs_artist_detail'),
     url(r'^venues/$', views.venue_list, name='gigs_venue_list'),
     url(r'^towns/$', object_list, town_list_dict, name='gigs_town_list'),
+    url(r'^town/(?P<slug>.+)/$', object_detail, {
+        'queryset': Town.objects.published(),
+        'template_object_name': 'town'}, name='gigs_town_detail'),
     url(r'^promoters/$', object_list, promoter_list_dict,
         name='gigs_promoter_list'),
     url(r'^promoters/(?P<slug>.+)/$', object_detail, {

@@ -276,6 +276,11 @@ class Town(models.Model):
     def __unicode__(self):
         return self.name
 
+    @permalink
+    def get_absolute_url(self):
+        """Return the absolute URL for a town."""
+        return ('gigs_town_detail', (self.slug,))
+
     def save(self, force_insert=False, force_update=False,
         update_number_of_upcoming_gigs=False):
         """
@@ -296,6 +301,11 @@ class Town(models.Model):
             except IndexError:
                 pass  # No gigs yet.
         super(Town, self).save(force_insert, force_update)
+
+    def upcoming_gigs(self):
+        """Return a queryset containing all upcoming gigs in this town."""
+        return Gig.objects.published(venue__town=self,
+            date__gte=datetime.date.today())
 
 
 class Promoter(models.Model):
