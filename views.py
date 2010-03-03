@@ -121,22 +121,6 @@ def artist_list(request):
         RequestContext(request))
 
 
-def artist_detail(request, slug):
-    """Display the details of one particular artist."""
-    today = datetime.date.today()
-    artist = get_object_or_404(Artist.objects.published(), slug=slug)
-    upcoming_gigs = Gig.objects.published(date__gte=today).select_related()
-    past_gigs = Gig.objects.published(date__lt=today).select_related()
-
-    context = {
-        'artist': artist,
-        'upcoming_gigs': upcoming_gigs,
-        'past_gigs': past_gigs,
-    }
-    return render_to_response('gigs/artist_detail.html', context,
-        RequestContext(request))
-
-
 def venue_list(request):
     """List all venues by name, categorised by town."""
     town_list = Town.objects.published().select_related()
