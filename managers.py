@@ -22,3 +22,22 @@ class PublishedManager(Manager):
         ``True``.
         """
         return self.get_query_set().filter(published=True, **kwargs)
+
+
+class GigManager(PublishedManager):
+
+    """
+    Django model manager for the ``Gig`` model.  Adds two methods,
+    ``upcoming_gigs()`` and ``past_gigs()``, that return only those gigs
+    that have yet to take place and have already taken place respectively.
+    """
+
+    def upcoming(self, **kwargs):
+        """Return related gigs that have yet to take place."""
+        today = datetime.date.today()
+        return self.published(date__gte=today, **kwargs)
+
+    def past(self, **kwargs):
+        """Return related gigs that have already taken place."""
+        today = datetime.date.today()
+        return self.published(date__lt=today, **kwargs)

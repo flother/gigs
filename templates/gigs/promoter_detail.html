@@ -10,12 +10,12 @@
 {% endblock %}
 
 {% block content %}
-	{% with promoter.gig_set.published as gig_list %}
+	{% with promoter.gig_set.upcoming as gig_list %}
 		{% if gig_list %}
 			<div class="list">
 				<h2>Gigs</h2>
 				<ol>
-					{% for gig in promoter.gig_set.published %}
+					{% for gig in gig_list %}
 						<li class="vevent">
 							<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
 								{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}

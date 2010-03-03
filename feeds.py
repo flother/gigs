@@ -19,8 +19,11 @@ class LatestGigs(Feed):
             args=('latest-gigs',))
 
     def items(self):
-        """Return the ten most recently created gigs."""
-        return Gig.objects.published().order_by('-created').select_related()[:10]
+        """
+        Return the ten most recently created gigs that have yet to take
+        place.
+        """
+        return Gig.objects.upcoming().order_by('-created').select_related()[:10]
 
     def item_pubdate(self, item):
         """

@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-	{% with venue.gig_set.published as upcoming_gigs %}
+	{% with venue.gig_set.upcoming as upcoming_gigs %}
 		{% if upcoming_gigs %}
 			{% regroup upcoming_gigs by date|date:"Y m" as upcoming_gigs %}
 			{% for month in upcoming_gigs %}

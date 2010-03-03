@@ -5,7 +5,7 @@ from django.db.models import Count, permalink
 from django.utils.html import urlize
 from markdown import markdown
 
-from gigs.managers import PublishedManager
+from gigs.managers import PublishedManager, GigManager
 
 
 class ImportIdentifier(models.Model):
@@ -67,7 +67,7 @@ class Gig(models.Model):
     import_identifiers = models.ManyToManyField('ImportIdentifier',
         limit_choices_to={'type': ImportIdentifier.GIG_IMPORT_TYPE})
 
-    objects = PublishedManager()
+    objects = GigManager()
 
     class Meta:
         get_latest_by = 'created'
@@ -143,14 +143,14 @@ class Artist(models.Model):
         ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
-            upcoming_gigs = Gig.objects.published(artist__id=self.id,
-                date__gte=datetime.date.today()).values('artist_id')
+            upcoming_gigs = Gig.objects.upcoming(
+                artist__id=self.id).values('artist_id')
             gig_count = upcoming_gigs.annotate(num_of_artists=Count('id'))
             try:
                 ordered_gig_count = gig_count.order_by('-num_of_artists')[0]
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_artists']
             except IndexError:
-                pass  # No gigs yet.
+                self.number_of_upcoming_gigs = 0  # No gigs yet.
         self.biography_html = markdown(urlize(self.biography, trim_url_limit=40,
             nofollow=False))
         super(Artist, self).save(force_insert, force_update)
@@ -243,14 +243,14 @@ class Venue(models.Model):
         ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
-            upcoming_gigs = Gig.objects.published(venue__id=self.id,
-                date__gte=datetime.date.today()).values('venue_id')
+            upcoming_gigs = Gig.objects.upcoming(
+                venue__id=self.id).values('venue_id')
             gig_count = upcoming_gigs.annotate(num_of_venues=Count('id'))
             try:
                 ordered_gig_count = gig_count.order_by('-num_of_venues')[0]
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_venues']
             except IndexError:
-                pass  # No gigs yet.
+                self.number_of_upcoming_gigs = 0  # No gigs yet.
         self.description_html = markdown(urlize(self.description,
             trim_url_limit=40, nofollow=False))
         super(Venue, self).save(force_insert, force_update)
@@ -297,20 +297,19 @@ class Town(models.Model):
         ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
-            upcoming_gigs = Gig.objects.published(venue__town__id=self.id,
-                date__gte=datetime.date.today()).values('venue__town__id')
+            upcoming_gigs = Gig.objects.upcoming(
+                venue__town__id=self.id).values('venue__town__id')
             gig_count = upcoming_gigs.annotate(num_of_towns=Count('id'))
             try:
                 ordered_gig_count = gig_count.order_by('-num_of_towns')[0]
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_towns']
             except IndexError:
-                pass  # No gigs yet.
+                self.number_of_upcoming_gigs = 0  # No gigs yet.
         super(Town, self).save(force_insert, force_update)
 
     def upcoming_gigs(self):
         """Return a queryset containing all upcoming gigs in this town."""
-        return Gig.objects.published(venue__town=self,
-            date__gte=datetime.date.today())
+        return Gig.objects.upcoming(venue__town=self)
 
 
 class Promoter(models.Model):
@@ -352,12 +351,12 @@ class Promoter(models.Model):
         ``import_gigs_from_ripping_records`` command.
         """
         if update_number_of_upcoming_gigs:
-            upcoming_gigs = Gig.objects.published(promoter__id=self.id,
-                date__gte=datetime.date.today()).values('promoter_id')
+            upcoming_gigs = Gig.objects.upcoming(
+                promoter__id=self.id).values('promoter_id')
             gig_count = upcoming_gigs.annotate(num_of_promoters=Count('id'))
             try:
                 ordered_gig_count = gig_count.order_by('-num_of_promoters')[0]
                 self.number_of_upcoming_gigs = ordered_gig_count['num_of_promoters']
             except IndexError:
-                pass  # No gigs yet.
+                self.number_of_upcoming_gigs = 0  # No gigs yet.
         super(Promoter, self).save(force_insert, force_update)
