@@ -14,7 +14,7 @@
 		<ol>
 			{% for promoter in promoter_list %}
 				<li>
-					<a href="#" title="See all gigs promoted by {{ promoter }}">{{ promoter }}</a>
+					<a href="{{ promoter.get_absolute_url }}" title="See all gigs promoted by {{ promoter }}">{{ promoter }}</a>
 					<span>{{ promoter.number_of_upcoming_gigs }} upcoming gig{{ promoter.number_of_upcoming_gigs|pluralize }}</span>
 				</li>
 			{% endfor %}

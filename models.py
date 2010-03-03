@@ -322,6 +322,11 @@ class Promoter(models.Model):
     def __unicode__(self):
         return self.name
 
+    @permalink
+    def get_absolute_url(self):
+        from django.views.generic.list_detail import object_detail
+        return (object_detail, (self.slug,))
+
     def save(self, force_insert=False, force_update=False,
         update_number_of_upcoming_gigs=False):
         """

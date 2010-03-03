@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from django.views.generic.list_detail import object_list
+from django.views.generic.list_detail import object_list, object_detail
 
 from gigs.feeds import LatestGigs
 from gigs.models import Town, Promoter
@@ -35,6 +35,9 @@ urlpatterns = patterns('',
     url(r'^towns/$', object_list, town_list_dict, name='gigs_town_list'),
     url(r'^promoters/$', object_list, promoter_list_dict,
         name='gigs_promoter_list'),
+    url(r'^promoters/(?P<slug>.+)/$', object_detail, {
+        'queryset': Promoter.objects.published(),
+        'template_object_name': 'promoter'}, name='gigs_promoter_detail'),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
         {'feed_dict': feeds}, name='gigs_feeds'),
 )
