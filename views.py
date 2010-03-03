@@ -74,7 +74,8 @@ def gigs_index(request):
     """
     months_with_gigs = Gig.objects.published().order_by('-date').dates('date',
         'month')
-    upcoming_gigs = Gig.objects.published(date__gte=datetime.date.today())
+    today = datetime.date.today()
+    upcoming_gigs = Gig.objects.published(date__gte=today).select_related()
     context = {
         'months_with_gigs': months_with_gigs,
         'upcoming_gigs': upcoming_gigs,
@@ -86,7 +87,8 @@ def gigs_index(request):
 def gig_detail(request, year, month, day, slug):
     """Display the details of one particular gig."""
     gig_date = datetime.date(*map(int, [year, month, day]))
-    gig = get_object_or_404(Gig.objects.published(), date=gig_date, slug=slug)
+    gig = get_object_or_404(Gig.objects.published().select_related(),
+        date=gig_date, slug=slug)
     context = {
         'gig': gig,
     }
@@ -96,8 +98,6 @@ def gig_detail(request, year, month, day, slug):
 
 def artist_list(request):
     """List all artists by name."""
-    earliest_gig = Gig.objects.published()[0]
-
     # Create an empty dictionary with upper-case letters of the alphabet as
     # keys and empty lists as values.  The lists will be filled with artists
     # according to the first letter of their name.  Any band not starting with a
@@ -114,7 +114,6 @@ def artist_list(request):
         alphabetic_artists[first_letter].append(artist)
 
     context = {
-        'earliest_gig': earliest_gig,
         'alphabetic_artists': alphabetic_artists,
         'artist_count': len(artists),
     }
@@ -126,8 +125,8 @@ def artist_detail(request, slug):
     """Display the details of one particular artist."""
     today = datetime.date.today()
     artist = get_object_or_404(Artist, slug=slug)
-    upcoming_gigs = Gig.objects.published(date__gte=today)
-    past_gigs = Gig.objects.published(date__lt=today)
+    upcoming_gigs = Gig.objects.published(date__gte=today).select_related()
+    past_gigs = Gig.objects.published(date__lt=today).select_related()
 
     context = {
         'artist': artist,
