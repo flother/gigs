@@ -1,0 +1,36 @@
+{% extends "gigs/base.html" %}
+{% load thumbnail %}
+
+{% block title %}{{ venue }}{% endblock %}
+{% block content_title %}{{ venue.name }}{% endblock %}
+{% block body_id %}venue{% endblock %}
+
+{% block content_intro %}
+	<p>Hosting {{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}.</p>
+{% endblock %}
+
+{% block content %}
+	{% with venue.gig_set.published as upcoming_gigs %}
+		{% if upcoming_gigs %}
+			{% regroup upcoming_gigs by date|date:"Y m" as upcoming_gigs %}
+			{% for month in upcoming_gigs %}
+				<div class="list">
+					<h2>{{ month.list.0.date|date:"F Y" }}</h2>
+					<ol>
+						{% for gig in month.list %}
+							<li class="vevent">
+								<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
+									{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+									<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+									<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+									<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+								</a>
+								<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+							</li>
+						{% endfor %}
+					</ol>
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+{% endblock %}

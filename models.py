@@ -222,6 +222,11 @@ class Venue(models.Model):
     def __unicode__(self):
         return "%s, %s" % (self.name, self.town)
 
+    @permalink
+    def get_absolute_url(self):
+        """Return the absolute URL for a venue."""
+        return ('gigs_venue_detail', (self.slug,))
+
     def save(self, force_insert=False, force_update=False,
         update_number_of_upcoming_gigs=False):
         """
