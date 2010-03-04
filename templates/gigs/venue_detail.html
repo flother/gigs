@@ -10,6 +10,9 @@
 {% endblock %}
 
 {% block content %}
+	{% if venue.longitude or venue.town.longitude %}
+		<div id="map"></div>
+	{% endif %}
 	{% with venue.gig_set.upcoming as upcoming_gigs %}
 		{% if upcoming_gigs %}
 			{% regroup upcoming_gigs by date|date:"Y m" as upcoming_gigs %}
@@ -33,4 +36,23 @@
 			{% endfor %}
 		{% endif %}
 	{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	{% if venue.longitude or venue.town.longitude %}
+		<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}gigs/js/map.js"></script>
+		<script type="text/javascript">
+			Gigs.map.init("map", "{{ MEDIA_URL}}", '{{ CLOUDMADE_API_KEY }}', {{ CLOUDMADE_STYLE_ID }});
+			{% if venue.longitude and venue.latitude %}
+				Gigs.map.show({{ venue.longitude }}, {{ venue.latitude }}, 16);
+				Gigs.map.addMarker({{ venue.longitude }}, {{ venue.latitude }}, "{{ venue.name }}");
+			{% else %}
+				{% if venue.town.longitude and venue.town.latitude %}
+					Gigs.map.show({{ venue.town.longitude }}, {{ venue.town.latitude }}, 12);
+				{% endif %}
+			{% endif %}
+		</script>
+	{% endif %}
 {% endblock %}

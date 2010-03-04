@@ -113,6 +113,23 @@ context processor to your project's settings::
       'gigs.context_processors.amazon_affiliate_tag',
   )
 
+Some of the templates display a `Cloudmade`_ map.  In order for the map to be
+displayed you need to add two settings and a context processor::
+
+  TEMPLATE_CONTEXT_PROCESSORS = (
+      # ...
+      'gigs.context_processors.cloudmade',
+  )
+
+  CLOUDMADE_API_KEY = 'your-api-key-here'
+  CLOUDMADE_STYLE_ID = 1
+
+You can apply for an API key find out more about Cloudmade from the
+`Web Maps Studio web site`_
+
+.. _Cloudmade: http://www.cloudmade.com/
+.. _Web Maps Studio web site: http://developers.cloudmade.com/projects/show/web-maps-studio
+
 And finally run ``django-admin.py syncdb`` to create the database tables.
 
 
