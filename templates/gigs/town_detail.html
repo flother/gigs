@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-	{% if town.longitude or town.longitude %}
+	{% if town.latitude or town.latitude %}
 		<div id="map"></div>
 	{% endif %}
 	{% with town.upcoming_gigs as upcoming_gigs %}
@@ -40,15 +40,15 @@
 
 {% block scripts %}
 	{{ block.super }}
-	{% if town.longitude and town.longitude %}
+	{% if town.latitude and town.latitude %}
 		<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
 		<script type="text/javascript" src="{{ MEDIA_URL }}gigs/js/map.js"></script>
 		<script type="text/javascript">
 			Gigs.map.init("map", "{{ MEDIA_URL}}", '{{ CLOUDMADE_API_KEY }}', {{ CLOUDMADE_STYLE_ID }});
-			Gigs.map.show({{ town.longitude }}, {{ town.latitude }}, 12);
+			Gigs.map.show({{ town.latitude }}, {{ town.longitude }}, 12);
 			{% for venue in town.venue_set.all %}
-				{% if venue.longitude and venue.latitude %}
-					Gigs.map.addMarker({{ venue.longitude }}, {{ venue.latitude }}, "{{ venue.name }}: {{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}");
+				{% if venue.latitude and venue.longitude %}
+					Gigs.map.addMarker({{ venue.latitude }}, {{ venue.longitude }}, "{{ venue.name }}: {{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}");
 				{% endif %}
 			{% endfor %}
 		</script>

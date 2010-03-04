@@ -71,7 +71,7 @@ class VenueAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('name', 'slug', 'description', 'photo', 'address',
-                'town', 'longitude', 'latitude', 'web_site', 'published')
+                'town', 'latitude', 'longitude', 'web_site', 'published')
         }),
         ('Import options', {
             'classes': ('collapse',),
@@ -92,7 +92,7 @@ class TownAdmin(admin.ModelAdmin):
     date_hierarchy = 'updated'
     fieldsets = (
         (None, {
-            'fields': ('name', 'slug', 'photo', 'longitude', 'latitude',
+            'fields': ('name', 'slug', 'photo', 'latitude', 'longitude',
                 'published')
         }),
         ('Import options', {

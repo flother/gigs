@@ -10,24 +10,24 @@
 {% endblock %}
 
 {% block content %}
-	{% if gig.venue.longitude or gig.venue.town.longitude %}
+	{% if gig.venue.latitude or gig.venue.town.latitude %}
 		<div id="map"></div>
 	{% endif %}
 {% endblock %}
 
 {% block scripts %}
 	{{ block.super }}
-	{% if gig.venue.longitude or gig.venue.town.longitude %}
+	{% if gig.venue.latitude or gig.venue.town.latitude %}
 		<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
 		<script type="text/javascript" src="{{ MEDIA_URL }}gigs/js/map.js"></script>
 		<script type="text/javascript">
 			Gigs.map.init("map", "{{ MEDIA_URL}}", '{{ CLOUDMADE_API_KEY }}', {{ CLOUDMADE_STYLE_ID }});
-			{% if gig.venue.longitude and gig.venue.latitude %}
-				Gigs.map.show({{ gig.venue.longitude }}, {{ gig.venue.latitude }}, 16);
-				Gigs.map.addMarker({{ gig.venue.longitude }}, {{ gig.venue.latitude }}, "{{ gig.venue.name }}");
+			{% if gig.venue.latitude and gig.venue.longitude %}
+				Gigs.map.show({{ gig.venue.latitude }}, {{ gig.venue.longitude }}, 16);
+				Gigs.map.addMarker({{ gig.venue.latitude }}, {{ gig.venue.longitude }}, "{{ gig.venue.name }}");
 			{% else %}
-				{% if gig.venue.town.longitude and gig.venue.town.latitude %}
-					Gigs.map.show({{ gig.venue.town.longitude }}, {{ gig.venue.town.latitude }}, 12);
+				{% if gig.venue.town.latitude and gig.venue.town.longitude %}
+					Gigs.map.show({{ gig.venue.town.latitude }}, {{ gig.venue.town.longitude }}, 12);
 				{% endif %}
 			{% endif %}
 		</script>
