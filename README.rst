@@ -100,10 +100,18 @@ to include your Last.fm API key in your Django project's settings::
 
 If you use the ``import_albums`` management command (detailed below), each
 artist's page will include links to their albums on Amazon.  If you want these
-links to include your Amazon affiliate tag, include the following setting in
-your project's settings file::
+links to include your Amazon affiliate tag include the following setting in your
+project's settings file::
 
   AMAZON_AFFILIATE_TAG = 'your-affiliate-link'
+
+You'll also need to add the ``gigs.context_processors.amazon_affiliate_tag``
+context processor to your project's settings::
+
+  TEMPLATE_CONTEXT_PROCESSORS = (
+      # ...
+      'gigs.context_processors.amazon_affiliate_tag',
+  )
 
 And finally run ``django-admin.py syncdb`` to create the database tables.
 
