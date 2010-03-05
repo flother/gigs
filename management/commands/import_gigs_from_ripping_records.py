@@ -184,7 +184,7 @@ class Command(NoArgsCommand):
             artist_id, created = ImportIdentifier.objects.get_or_create(
                 identifier=gig.artist, type=ImportIdentifier.ARTIST_IMPORT_TYPE)
             try:
-                artist = artist_id.artist_set.published()[0]
+                artist = artist_id.artist_set.all()[0]
                 logger.debug('Found artist: %s.' % artist)
             except IndexError:
                 artist = Artist.objects.create(name=gig.artist,
@@ -199,7 +199,7 @@ class Command(NoArgsCommand):
                 town_id, created = ImportIdentifier.objects.get_or_create(
                     identifier=gig.town, type=ImportIdentifier.TOWN_IMPORT_TYPE)
                 try:
-                    town = town_id.town_set.published()[0]
+                    town = town_id.town_set.all()[0]
                     logger.debug('Found town: %s.' % town)
                 except IndexError:
                     town = Town.objects.create(name=gig.town,
@@ -217,7 +217,7 @@ class Command(NoArgsCommand):
             venue_id, created = ImportIdentifier.objects.get_or_create(
                 identifier=gig.venue, type=ImportIdentifier.VENUE_IMPORT_TYPE)
             try:
-                venue = venue_id.venue_set.published()[0]
+                venue = venue_id.venue_set.all()[0]
                 logger.debug('Found venue: %s.' % venue)
             except IndexError:
                 venue = Venue.objects.create(name=gig.venue,
@@ -234,7 +234,7 @@ class Command(NoArgsCommand):
                     identifier=gig.promoter,
                     type=ImportIdentifier.PROMOTER_IMPORT_TYPE)
                 try:
-                    promoter = promoter_id.promoter_set.published()[0]
+                    promoter = promoter_id.promoter_set.all()[0]
                     logger.debug('Found promoter: %s.' % promoter)
                 except IndexError:
                     promoter = Promoter.objects.create(name=gig.promoter,
@@ -254,7 +254,7 @@ class Command(NoArgsCommand):
                 identifier=gig_identifier,
                 type=ImportIdentifier.GIG_IMPORT_TYPE)
             try:
-                db_gig = gig_id.gig_set.published()[0]
+                db_gig = gig_id.gig_set.all()[0]
                 logger.debug('Gig already exists.')
                 # If the gig already exists make sure it's marked appropriately
                 # as sold out, cancelled, or not.
@@ -280,6 +280,6 @@ class Command(NoArgsCommand):
         # ``number_of_upcoming_gigs`` field is correct and up-to-date.
         logger.debug('Saving all models to update the number of upcoming gigs.')
         for model in [Artist, Venue, Town, Promoter]:
-            for obj in model.objects.published():
+            for obj in model.objects.all():
                 obj.save(update_number_of_upcoming_gigs=True)
         logger.info('All model objects updated.')
