@@ -37,7 +37,7 @@ promoter_list_dict = {
 
 urlpatterns = patterns('',
     url(r'^$', views.home_page, name='gigs_home_page'),
-    url(r'^gigs/$', views.gigs_index, name='gigs_gig_index'),
+    url(r'^gigs/$', views.gigs_archive, name='gigs_gig_archive'),
     url(r'^gigs/(?P<year>\d{4})/$', archive_year, gig_archive_year_dict,
         name='gigs_gig_archive_year'),
     url(r'^gigs/(?P<year>\d{4})/(?P<month>\d{2})/$', archive_month,

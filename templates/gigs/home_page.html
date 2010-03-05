@@ -34,7 +34,7 @@
 					<a href="{% url gigs_gig_archive_month month|date:"Y" month|date:"m" %}" title="View all gigs in {{ month|date:"F Y" }}">{{ month|date:"F" }}</a>
 				</li>
 			{% endfor %}
-			<li class="more"><a href="{% url gigs_gig_index %}">View all dates&nbsp;…</a></li>
+			<li class="more"><a href="{% url gigs_gig_archive %}">View all dates&nbsp;…</a></li>
 		</ol>
 	</div>
 	{% if gigs_this_week %}

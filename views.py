@@ -64,7 +64,7 @@ def home_page(request):
         RequestContext(request))
 
 
-def gigs_index(request):
+def gigs_archive(request):
     """
     List all upcoming gigs, soonest first, and a list of months (by year) that
     gigs have or will occur in.
@@ -76,7 +76,7 @@ def gigs_index(request):
         'months_with_gigs': months_with_gigs,
         'upcoming_gigs': upcoming_gigs,
     }
-    return render_to_response('gigs/gig_index.html', context,
+    return render_to_response('gigs/gig_archive.html', context,
         RequestContext(request))
 
 
