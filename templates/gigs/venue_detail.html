@@ -6,7 +6,7 @@
 {% block body_id %}venue{% endblock %}
 
 {% block content_intro %}
-	<p>Hosting {{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}.</p>
+	<p>Hosting {{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}{% if venue.address %} at {{ venue.address }}, {{ venue.town }}{% endif %}.</p>
 {% endblock %}
 
 {% block content %}
