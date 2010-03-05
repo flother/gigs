@@ -34,7 +34,7 @@
 					<a href="#" title="View all gigs in {{ month|date:"F Y" }}">{{ month|date:"F" }}</a>
 				</li>
 			{% endfor %}
-			<li class="more"><a href="#">View all dates&nbsp;…</a></li>
+			<li class="more"><a href="{% url gigs_gig_index %}">View all dates&nbsp;…</a></li>
 		</ol>
 	</div>
 	{% if gigs_this_week %}
@@ -89,7 +89,7 @@
 		<ol>
 			{% for venue in venues %}
 				<li>
-					<a href="#" title="Gigs at {{ venue.name }}, {{ venue.town }}">{{ venue.name }}, {{ venue.town }}</a>
+					<a href="{{ venue.get_absolute_url }}" title="Gigs at {{ venue.name }}, {{ venue.town }}">{{ venue.name }}, {{ venue.town }}</a>
 					<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
 				</li>
 			{% endfor %}
@@ -101,7 +101,7 @@
 		<ol>
 			{% for town in towns %}
 				<li>
-					<a href="#" title="Gigs in {{ town }}">{{ town.name }}</a>
+					<a href="{{ town.get_absolute_url }}" title="Gigs in {{ town }}">{{ town.name }}</a>
 					<span>{{ town.number_of_upcoming_gigs }} upcoming gig{{ town.number_of_upcoming_gigs|pluralize }}</span>
 				</li>
 			{% endfor %}
