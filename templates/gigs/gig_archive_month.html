@@ -1,0 +1,32 @@
+{% extends "gigs/base.html" %}
+{% load thumbnail %}
+
+{% block title %}Gigs in {{ month|date:"F Y" }}{% endblock %}
+{% block content_title %}{{ month|date:"F Y" }}{% endblock %}
+{% block body_id %}gigs{% endblock %}
+
+{% block content_intro %}
+	{% with gig_list|length as number_of_upcoming_gigs %}
+		<p>All {{ number_of_upcoming_gigs }} gig{{ number_of_upcoming_gigs|pluralize }} occurring in {{ month|date:"F Y" }}.</p>
+	{% endwith %}
+{% endblock %}
+
+{% block content %}
+	<div class="list">
+		<h2>Gigs</h2>
+		<ol>
+			{% for gig in gig_list %}
+				<li class="vevent">
+					<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
+						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+						<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+						<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+					</a>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+				</li>
+			{% endfor %}
+			<li class="more"><a href="{% url gigs_gig_archive_year month|date:"Y" %}">All gigs in {{ month|date:"Y" }} …</a></li>
+		</ol>
+	</div>
+{% endblock %}

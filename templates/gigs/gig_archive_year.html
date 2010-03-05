@@ -1,0 +1,44 @@
+{% extends "gigs/base.html" %}
+{% load thumbnail %}
+
+{% block title %}Gigs in {{ year }}{% endblock %}
+{% block content_title %}Gigs in {{ year }}{% endblock %}
+{% block body_id %}gigs{% endblock %}
+
+{% block content_intro %}
+	{% with gig_list|length as number_of_upcoming_gigs %}
+		<p>All {{ number_of_upcoming_gigs }} gig{{ number_of_upcoming_gigs|pluralize }} occurring in {{ year }}.</p>
+	{% endwith %}
+{% endblock %}
+
+{% block content %}
+	<div class="list">
+		<h2>{{ year }} by month</h2>
+		<ol>
+			{% for month in date_list %}
+				<li>
+					<a href="{% url gigs_gig_archive_month year month|date:"m" %}" title="View all gigs in {{ month.date|date:"F Y" }}">{{ month.date|date:"F" }}</a>
+				</li>
+			{% endfor %}
+		</ol>
+	</div>
+	{% regroup gig_list by date|date:"m" as gigs_by_month %}
+	{% for month in gigs_by_month %}
+		<div class="list">
+			<h2>{{ month.list.0.date|date:"F" }}</h2>
+			<ol>
+				{% for gig in month.list %}
+					<li class="vevent">
+						<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
+							{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+							<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+							<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+							<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+						</a>
+						<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+	{% endfor %}
+{% endblock %}

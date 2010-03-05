@@ -31,7 +31,7 @@
 		<ol>
 			{% for month in upcoming_months_with_gigs %}
 				<li>
-					<a href="#" title="View all gigs in {{ month|date:"F Y" }}">{{ month|date:"F" }}</a>
+					<a href="{% url gigs_gig_archive_month month|date:"Y" month|date:"m" %}" title="View all gigs in {{ month|date:"F Y" }}">{{ month|date:"F" }}</a>
 				</li>
 			{% endfor %}
 			<li class="more"><a href="{% url gigs_gig_index %}">View all dates&nbsp;…</a></li>
