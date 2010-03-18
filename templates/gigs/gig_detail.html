@@ -3,6 +3,12 @@
 
 {% block title %}{{ gig.artist.name }} at {{ gig.venue }} on {{ gig.date|date }}.</p>{% endblock %}
 {% block content_title %}{{ gig.artist.name }}{% endblock %}
+
+{% block extra_head %}
+	{{ block.super }}
+	<link rel="shortlink" href="{{ gig.get_short_absolute_url }}">
+{% endblock %}
+
 {% block body_id %}gig{% endblock %}
 
 {% block content_intro %}

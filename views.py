@@ -1,8 +1,10 @@
+import base64
 import datetime
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.datastructures import SortedDict
+from django.views.generic.simple import redirect_to
 
 from gigs.models import Gig, Artist, Venue, Town
 
@@ -90,6 +92,19 @@ def gig_detail(request, year, month, day, slug):
     }
     return render_to_response('gigs/gig_detail.html', context,
         RequestContext(request))
+
+
+def gig_detail_shorturl(request, base32_id):
+    """
+    Return a permanent redirect (HTTP 301) to a gig's absolute URL using
+    the gig's id in base32.
+    """
+    # Pad the base32 id out to a length divisible by 8, as required by the
+    # base64 library.
+    base32_id += '=' * (8 % len(base32_id))
+    id = base64.b32decode(base32_id, casefold=True)
+    gig = get_object_or_404(Gig, pk=id)
+    return redirect_to(request, gig.get_absolute_url())
 
 
 def artist_list(request):

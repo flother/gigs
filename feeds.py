@@ -25,6 +25,10 @@ class LatestGigs(Feed):
         """
         return Gig.objects.upcoming().order_by('-created').select_related()[:10]
 
+    def item_link(self, item):
+        """Takes a gig as returned by items() and returns its short URL."""
+        return item.get_short_absolute_url()
+
     def item_pubdate(self, item):
         """
         Takes an item, as returned by items(), and returns the item's

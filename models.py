@@ -1,3 +1,4 @@
+import base64
 import datetime
 
 from django.db import models
@@ -88,6 +89,16 @@ class Gig(models.Model):
             'slug': self.slug,
         }
         return (gig_detail, None, kwargs)
+
+    @permalink
+    def get_short_absolute_url(self):
+        """
+        Return a shorter version of the gig's absolute URL, with the id in
+        base 32 used as the unique identifier.
+        """
+        from gigs.views import gig_detail_shorturl
+        base32_id = base64.b32encode(str(self.pk)).strip('=').lower()
+        return (gig_detail_shorturl, None, {'base32_id': base32_id})
 
     def is_finished(self):
         """Return True if the gig date has passed, False otherwise."""

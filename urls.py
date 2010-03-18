@@ -46,6 +46,8 @@ urlpatterns = patterns('',
         gig_archive_month_and_day_dict, name='gigs_gig_archive_day'),
     url(r'^gigs/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<slug>.+)/$',
         views.gig_detail, name='gigs_gig_detail'),
+    url(r'^(?P<base32_id>\w+)/$', views.gig_detail_shorturl,
+        name='gigs_gig_detail_shorturl'),
     url(r'^artists/$', views.artist_list, name='gigs_artist_list'),
     url(r'^artists/(?P<slug>.+)/$', object_detail, {
         'queryset': Artist.objects.published(),
