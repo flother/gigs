@@ -19,16 +19,20 @@
 	{% if gig.venue.latitude or gig.venue.town.latitude %}
 		<div id="map"></div>
 	{% endif %}
-	<div{% if gig.cancelled or gig.sold_out %} class="notickets"{% endif %} id="price">
-		{% if gig.cancelled %}
-			Cancelled
-		{% else %}
-			{% if gig.sold_out %}
-				Sold out
+	<div id="tickets">
+		<div{% if gig.cancelled or gig.sold_out %} class="notickets"{% endif %} id="price">
+			{% if gig.cancelled %}
+				Cancelled
 			{% else %}
-				Tickets £{{ gig.price|stringformat:"0.2f" }}
+				{% if gig.sold_out %}
+					Sold out
+				{% else %}
+					Tickets £{{ gig.price|stringformat:"0.2f" }}
+				{% endif %}
 			{% endif %}
-		{% endif %}
+		</div>
+		<h2>{% if gig.cancelled or gig.sold_out %}Buying tickets{% else %}Want a ticket?{% endif %}</h2>
+		<p>You can buy tickets for {% if gig.cancelled or gig.sold_out %}other gigs{% else %}{{ gig.artist }}{% endif %} by phone or in person from Ripping Records in Edinburgh. <a href="/buy-tickets/" title="Find out more about buying {{ gig.artist }} tickets">Find out more</a>.</p>
 	</div>
 	{% thumbnail gig.artist.photo 340x238 crop="0,0" bw upscale as artist_thumb %}
 	<img alt="Photo of {{ gig.artist.name }}" height="238" id="photo" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="340" />
