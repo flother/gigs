@@ -6,7 +6,7 @@
 {% block body_id %}artist{% endblock %}
 
 {% block content_intro %}
-	{% with artist.gig_set.select_related.latest as latest_gig %}
+	{% with artist.gig_set.published.select_related.latest as latest_gig %}
 		<p>{% if latest_gig.is_finished %}Last spotted in{% else %}Next visiting{% endif %} {{ latest_gig.venue.town }} at {{ latest_gig.venue.name }} on {{ latest_gig.date|date }}.</p>
 	{% endwith %}
 {% endblock %}
