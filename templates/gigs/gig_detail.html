@@ -1,7 +1,7 @@
 {% extends "gigs/base.html" %}
 {% load thumbnail %}
 
-{% block title %}{{ gig.artist.name }} at {{ gig.venue }} on {{ gig.date|date }}.</p>{% endblock %}
+{% block title %}{{ gig.artist.name }} at {{ gig.venue }} on {{ gig.date|date }}{% endblock %}
 {% block content_title %}{{ gig.artist.name }}{% endblock %}
 
 {% block extra_head %}
@@ -19,6 +19,81 @@
 	{% if gig.venue.latitude or gig.venue.town.latitude %}
 		<div id="map"></div>
 	{% endif %}
+	<div{% if gig.cancelled or gig.sold_out %} class="notickets"{% endif %} id="price">
+		{% if gig.cancelled %}
+			Cancelled
+		{% else %}
+			{% if gig.sold_out %}
+				Sold out
+			{% else %}
+				Tickets £{{ gig.price|stringformat:"0.2f" }}
+			{% endif %}
+		{% endif %}
+	</div>
+	{% thumbnail gig.artist.photo 340x238 crop="0,0" bw upscale as artist_thumb %}
+	<img alt="Photo of {{ gig.artist.name }}" height="238" id="photo" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="340" />
+	<dl>
+		<dt>Who</dt>
+		<dd>
+			<a href="{{ gig.artist.get_absolute_url }}">{{ gig.artist.name }}</a>
+		</dd>
+		<dt>When</dt>
+		<dd>{{ gig.date|date }}</dd>
+		<dt>Where</dt>
+		<dd>
+			<a href="{{ gig.venue.get_absolute_url }}">{{ gig.venue.name }}</a>{% if gig.venue.address %}<br />{{ gig.venue.address }}{% endif %}, <a href="{{ gig.venue.town.get_absolute_url }}">{{ gig.venue.town }}</a>
+		</dd>
+		{% if gig.promoter %}
+			<dt>Promoter</dt>
+			<dd><a href="{{ gig.promoter.get_absolute_url }}">{{ gig.promoter.name }}</a></dd>
+		{% endif %}
+		{% if gig.extra_information %}
+			<dt>Extra info</dt>
+			<dd>{{ gig.extra_information|capfirst }}</dd>
+		{% endif %}
+	</dl>
+	<div id="biography">
+		<h2>Biography</h2>
+		<div>
+			{{ gig.artist.biography_html|truncatewords_html:100|safe }}
+			<p><a href="{{ gig.artist.get_absolute_url }}" title="Full biography of {{ gig.artist.name }}">Read more …</a></p>
+		</div>
+	</div>
+	{% if other_gigs_by_artist %}
+		<div class="list">
+			<h2>Other gigs</h2>
+			<ol>
+				{% for gig in other_gigs_by_artist %}
+					<li class="vevent{% if gig.is_finished %} finished{% endif %}">
+						<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
+							<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+							<span class="location">{{ gig.venue.town|truncatewords:3 }}</span>
+						</a>
+						<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"jS F Y" }}</abbr>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+	{% endif %}
+	{% with gig.artist.album_set.published as artist_albums %}
+		{% if artist_albums %}
+			<div class="list">
+				<h2>Albums</h2>
+				<ol>
+					{% for album in artist_albums %}
+						<li>
+							<a href="http://www.amazon.co.uk/dp/{{ album.asin }}?tag={{ AMAZON_AFFILIATE_TAG }}" title="Buy {{ album.title }} on Amazon">
+								{% thumbnail album.cover_art 63x63 crop="0,0" bw upscale as album_cover %}
+								<img alt="Cover of {{ album.title }}" height="63" src="{% if album_cover %}{{ album_cover }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" />
+								{{ album.title|truncatewords:3 }}
+							</a>
+							{% if album.release_date %}<span>{{ album.release_date|date:"Y" }}</span>{% endif %}
+						</li>
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
+	{% endwith %}
 {% endblock %}
 
 {% block scripts %}

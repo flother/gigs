@@ -89,8 +89,10 @@ def gig_detail(request, year, month, day, slug):
     gig_date = datetime.date(*map(int, [year, month, day]))
     gig = get_object_or_404(Gig.objects.published().select_related(),
         date=gig_date, slug=slug)
+    other_gigs_by_artist = gig.artist.gig_set.published().exclude(id=gig.id)
     context = {
         'gig': gig,
+        'other_gigs_by_artist': other_gigs_by_artist,
     }
     return render_to_response('gigs/gig_detail.html', context,
         RequestContext(request))
