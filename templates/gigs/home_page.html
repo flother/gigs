@@ -79,10 +79,7 @@
 		<h2>Browse by town</h2>
 		<ol>
 			{% for town in towns %}
-				<li>
-					<a href="{{ town.get_absolute_url }}" title="Gigs in {{ town }}">{{ town.name }}</a>
-					<span>{{ town.number_of_upcoming_gigs }} upcoming gig{{ town.number_of_upcoming_gigs|pluralize }}</span>
-				</li>
+				{% include "gigs/_town_in_list.html" %}
 			{% endfor %}
 		</ol>
 	</div>
