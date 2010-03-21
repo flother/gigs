@@ -1,0 +1,9 @@
+{% load thumbnail %}
+<li>
+	<a href="{{ artist.get_absolute_url }}" title="See all gigs for {{ artist.name }}">
+		{% thumbnail artist.photo 63x63 crop="0,0" bw upscale as artist_thumb %}
+		<img alt="Photo of {{ artist.name }}" height="63" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63">
+		{{ artist.name|truncatewords:3 }}
+	</a>
+	<span>{{ artist.number_of_upcoming_gigs }} upcoming gig{{ artist.number_of_upcoming_gigs|pluralize }}</span>
+</li>
