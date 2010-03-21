@@ -2,7 +2,7 @@
 <li>
 	<a href="http://www.amazon.co.uk/dp/{{ album.asin }}?tag={{ AMAZON_AFFILIATE_TAG }}" title="Buy {{ album.title }} on Amazon">
 		{% thumbnail album.cover_art 63x63 crop="0,0" bw upscale as album_cover %}
-		<img alt="Cover of {{ album.title }}" height="63" src="{% if album_cover %}{{ album_cover }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" />
+		<img alt="Cover of {{ album.title }}" height="63" src="{% if album_cover %}{{ album_cover }}{% else %}{{ MEDIA_URL }}gigs/img/default_album_63x63.jpg{% endif %}" width="63" />
 		{{ album.title|truncatewords:3 }}
 	</a>
 	{% if album.release_date %}<span>{{ album.release_date|date:"Y" }}</span>{% endif %}
