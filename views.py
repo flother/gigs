@@ -105,7 +105,7 @@ def gig_detail_shorturl(request, base32_id):
     """
     # Pad the base32 id out to a length divisible by 8, as required by the
     # base64 library.
-    base32_id += '=' * (8 % len(base32_id))
+    base32_id += '=' * (len(base32_id) / 8 + 1 * 8 - len(base32_id))
     id = base64.b32decode(base32_id, casefold=True)
     gig = get_object_or_404(Gig, pk=id)
     return redirect_to(request, gig.get_absolute_url())
