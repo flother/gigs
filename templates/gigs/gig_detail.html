@@ -35,7 +35,7 @@
 		<p>You can buy tickets for {% if gig.cancelled or gig.sold_out %}other gigs{% else %}{{ gig.artist }}{% endif %} by phone or in person from Ripping Records in Edinburgh. <a href="/buy-tickets/" title="Find out more about buying {{ gig.artist }} tickets">Find out more</a>.</p>
 	</div>
 	{% thumbnail gig.artist.photo 340x238 crop="0,0" bw upscale as artist_thumb %}
-	<img alt="Photo of {{ gig.artist.name }}" height="238" id="photo" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="340" />
+	<img alt="Photo of {{ gig.artist.name }}" height="238" id="photo" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_340x238.jpg{% endif %}" width="340" />
 	<dl>
 		<dt>Who</dt>
 		<dd>
