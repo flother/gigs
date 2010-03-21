@@ -213,7 +213,6 @@ class Venue(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     description_html = models.TextField(blank=True, editable=False)
-    photo = models.ImageField(upload_to='venues', blank=True)
     address = models.CharField(max_length=128, blank=True)
     town = models.ForeignKey('Town')
     latitude = models.FloatField(blank=True, null=True)
@@ -275,7 +274,6 @@ class Town(models.Model):
 
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
-    photo = models.ImageField(upload_to='towns', blank=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
