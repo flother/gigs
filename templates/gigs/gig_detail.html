@@ -56,13 +56,15 @@
 			<dd>{{ gig.extra_information|capfirst }}</dd>
 		{% endif %}
 	</dl>
-	<div id="biography">
-		<h2>Biography</h2>
-		<div>
-			{{ gig.artist.biography_html|truncatewords_html:100|safe }}
-			<p><a href="{{ gig.artist.get_absolute_url }}" title="Full biography of {{ gig.artist.name }}">Read more …</a></p>
+	{% if gig.artist.biography_html %}
+		<div id="biography">
+			<h2>Biography</h2>
+			<div>
+				{{ gig.artist.biography_html|truncatewords_html:100|safe }}
+				<p><a href="{{ gig.artist.get_absolute_url }}" title="Full biography of {{ gig.artist.name }}">Read more …</a></p>
+			</div>
 		</div>
-	</div>
+	{% endif %}
 	{% if other_gigs_by_artist %}
 		<div class="list">
 			<h2>Other gigs</h2>
