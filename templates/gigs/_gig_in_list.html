@@ -8,5 +8,5 @@
 		<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
 		<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
 	</a>
-	<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
+	<abbr class="dtstart" title="{{ gig.date }}">{% if artist %}{{ gig.date|date:"jS F Y" }}{% else %}{{ gig.date|date:"l jS" }}{% endif %}</abbr>
 </li>

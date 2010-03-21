@@ -87,7 +87,15 @@
 		<h2>Newly listed gigs</h2>
 		<ol>
 			{% for gig in new_gigs %}
-				{% include "gigs/_gig_in_list.html" %}
+				<li class="vevent{% if gig.is_finished %} finished{% endif %}">
+					<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
+						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
+						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
+						<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
+						<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+					</a>
+					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"jS F Y" }}</abbr>
+				</li>
 			{% endfor %}
 		</ol>
 	</div>
