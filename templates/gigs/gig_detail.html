@@ -27,11 +27,11 @@
 				{% if gig.sold_out %}
 					Sold out
 				{% else %}
-					Tickets £{{ gig.price|stringformat:"0.2f" }}
+					<a href="/buy-tickets/" title="Find out more about buying {{ gig.artist }} tickets">Tickets £{{ gig.price|stringformat:"0.2f" }}</a>
 				{% endif %}
 			{% endif %}
 		</div>
-		<h2>{% if gig.cancelled or gig.sold_out %}Buying tickets{% else %}Want a ticket?{% endif %}</h2>
+		<h2>{% if gig.cancelled or gig.sold_out %}Buying tickets{% else %}<a href="/buy-tickets/" title="Find out more about buying {{ gig.artist }} tickets">Want a ticket?</a>{% endif %}</h2>
 		<p>You can buy tickets for {% if gig.cancelled or gig.sold_out %}other gigs{% else %}{{ gig.artist }}{% endif %} by phone or in person from Ripping Records in Edinburgh. <a href="/buy-tickets/" title="Find out more about buying {{ gig.artist }} tickets">Find out more</a>.</p>
 	</div>
 	{% thumbnail gig.artist.photo 340x238 crop="0,0" bw upscale as artist_thumb %}
