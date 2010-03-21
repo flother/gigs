@@ -1,0 +1,4 @@
+<li>
+	<a href="{{ venue.get_absolute_url }}" title="See all gigs at {{ venue }}">{{ venue.name }}</a>
+	<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
+</li>

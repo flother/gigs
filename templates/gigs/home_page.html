@@ -72,10 +72,7 @@
 		<h2>Browse by venue</h2>
 		<ol>
 			{% for venue in venues %}
-				<li>
-					<a href="{{ venue.get_absolute_url }}" title="Gigs at {{ venue.name }}, {{ venue.town }}">{{ venue.name }}, {{ venue.town }}</a>
-					<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
-				</li>
+				{% include "gigs/_venue_in_list.html" %}
 			{% endfor %}
 			<li class="more"><a href="{% url gigs_venue_list %}">View all {{ number_of_venues }} venues&nbsp;…</a></li>
 		</ol>

@@ -14,10 +14,7 @@
 			<h2>{{ town.name }}</h2>
 			<ol>
 				{% for venue in town.venue_set.published %}
-					<li>
-						<a href="{{ venue.get_absolute_url }}" title="See all gigs at {{ venue }}">{{ venue.name }}</a>
-						<span>{{ venue.number_of_upcoming_gigs }} upcoming gig{{ venue.number_of_upcoming_gigs|pluralize }}</span>
-					</li>
+					{% include "gigs/_venue_in_list.html" %}
 				{% endfor %}
 			</ol>
 		</div>
