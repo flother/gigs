@@ -34,6 +34,13 @@ Gigs.map = {
 		// Create the map and centre it.
 		Gigs.map.canvas = new CM.Map(Gigs.map.element, cloudmade);
 		Gigs.map.canvas.setCenter(new CM.LatLng(lat, lng), zoom);
+
+		// Add a transparent overlay over the map, so when a user scrolls down
+		// the page it doesn't zoom the map out.
+		var mapElement = document.getElementById(Gigs.map.element);
+		var mapOverlay = document.createElement('div');
+		mapOverlay.setAttribute('id', 'map_overlay');
+		mapElement.parentNode.insertBefore(mapOverlay, mapElement.nextSibling);
 	},
 
 	/**
