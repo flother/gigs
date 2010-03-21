@@ -1,5 +1,4 @@
 {% extends "gigs/base.html" %}
-{% load thumbnail %}
 
 {% block title %}{{ town.name }}{% endblock %}
 {% block content_title %}{{ town.name }}{% endblock %}
@@ -21,15 +20,7 @@
 					<h2>{{ month.list.0.date|date:"F Y" }}</h2>
 					<ol>
 						{% for gig in month.list %}
-							<li class="vevent">
-								<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
-									{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
-									<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
-									<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
-									<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
-								</a>
-								<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS" }}</abbr>
-							</li>
+							{% include "gigs/_gig_in_list.html" %}
 						{% endfor %}
 					</ol>
 				</div>
