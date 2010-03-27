@@ -3,6 +3,7 @@ import datetime
 
 from django.db import models
 from django.db.models import Count, permalink
+from django.db.models.signals import post_save
 from django.utils.html import urlize
 from markdown import markdown
 
@@ -371,3 +372,18 @@ class Promoter(models.Model):
             except IndexError:
                 self.number_of_upcoming_gigs = 0  # No gigs yet.
         super(Promoter, self).save(force_insert, force_update)
+
+
+def ensure_gig_slug_matches_artist_slug(sender, **kwargs):
+    """
+    Signal receiver; called once an Artist model is saved.  If any
+    upcoming gig for this artist has a slug different to that of the
+    artist, the gig's slug is updated to match the artist's.
+    """
+    artist = kwargs['instance']
+    if not kwargs['created']:
+        for gig in artist.gig_set.upcoming():
+            if gig.slug != artist.slug:
+                gig.slug = artist.slug
+                gig.save()
+post_save.connect(ensure_gig_slug_matches_artist_slug, sender=Artist)
