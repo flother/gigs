@@ -27,6 +27,18 @@
 			{% endfor %}
 		{% endif %}
 	{% endwith %}
+	{% with venue.gig_set.past as past_gigs %}
+		{% if past_gigs %}
+			<div class="list">
+				<h2>Past gigs</h2>
+				<ol>
+					{% for gig in month.list %}
+						{% include "gigs/_gig_in_list.html" %}
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
+	{% endwith %}
 {% endblock %}
 
 {% block scripts %}
