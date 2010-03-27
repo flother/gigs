@@ -1,5 +1,5 @@
 {% extends "gigs/base.html" %}
-{% load thumbnail %}
+{% load thumbnail typography %}
 
 {% block title %}Live music in Edinburgh and Glasgow, Scotland{% endblock %}
 {% block body_id %}home{% endblock %}
@@ -18,9 +18,9 @@
 			<li class="vevent {% cycle one,two,three,four %}">
 				<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
 					<img alt="{{ gig.artist }}" height="147" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_220x147.jpg{% endif %}" width="220" title="">
-					<span class="summary" title="{{ gig.artist.name }}">{{ gig.artist.name|truncatewords:4 }}</span>
+					<span class="summary" title="{{ gig.artist.name }}">{{ gig.artist.name|truncate:27 }}</span>
 					{% if gig.price %}<span class="price">£{{ gig.price|stringformat:"0.2f" }}</span>{% endif %}
-					<span class="location" title="{{ gig.venue.name }}, {{ gig.venue.town }}">{{ gig.venue.name|truncatewords:3 }}, {{ gig.venue.town }}</span>
+					<span class="location" title="{{ gig.venue.name }}, {{ gig.venue.town }}">{{ gig.venue.name|truncate }}, {{ gig.venue.town }}</span>
 				</a>
 				<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"l jS F" }}</abbr>
 			</li>
@@ -91,8 +91,8 @@
 					<a class="url" href="{{ gig.get_absolute_url }}" title="{{ gig.artist }} at {{ gig.venue }}">
 						{% thumbnail gig.artist.photo 63x63 crop="0,0" bw upscale as gig_thumb %}
 						<img alt="" height="63" src="{% if gig_thumb %}{{ gig_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63" title="">
-						<span class="summary">{{ gig.artist.name|truncatewords:3 }}</span>
-						<span class="location">{{ gig.venue.name|truncatewords:3 }}</span>
+						<span class="summary">{{ gig.artist.name|truncate }}</span>
+						<span class="location">{{ gig.venue.name|truncate }}</span>
 					</a>
 					<abbr class="dtstart" title="{{ gig.date }}">{{ gig.date|date:"jS F Y" }}</abbr>
 				</li>
