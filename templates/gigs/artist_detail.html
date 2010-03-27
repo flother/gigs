@@ -7,19 +7,29 @@
 
 {% block content_intro %}
 	{% with artist.gig_set.published.select_related.latest as latest_gig %}
-		<p>{% if latest_gig.is_finished %}Last spotted in{% else %}Next visiting{% endif %} {{ latest_gig.venue.town }} at {{ latest_gig.venue.name }} on {{ latest_gig.date|date }}.</p>
+		<p>
+			{% if latest_gig %}
+				{% if latest_gig.is_finished %}Last spotted in{% else %}Next visiting{% endif %} {{ latest_gig.venue.town }} at {{ latest_gig.venue.name }} on {{ latest_gig.date|date }}.
+			{% else %}
+				Yet to play a gig in one of Scotland’s great cities.
+			{% endif %}
+		</p>
 	{% endwith %}
 {% endblock %}
 
 {% block content %}
-	<div class="list">
-		<h2>Gigs</h2>
-		<ol>
-			{% for gig in artist.gig_set.published %}
-				{% include "gigs/_gig_in_list.html" %}
-			{% endfor %}
-		</ol>
-	</div>
+	{% with artist.gig_set.published as gig_set %}
+		{% if gig_set %}
+			<div class="list">
+				<h2>Gigs</h2>
+				<ol>
+					{% for gig in gig_set %}
+						{% include "gigs/_gig_in_list.html" %}
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
+	{% endwith %}
 	{% if artist.album_set.published %}
 		<div class="list">
 			<h2>Albums</h2>
