@@ -4,7 +4,7 @@ from django.views.generic.date_based import archive_year, archive_month,\
 from django.views.generic.list_detail import object_list, object_detail
 
 from gigs.feeds import LatestGigs
-from gigs.models import Gig, Artist, Venue, Town, Promoter
+from gigs.models import Gig, Artist, Town, Promoter
 from gigs import views
 
 
@@ -53,9 +53,8 @@ urlpatterns = patterns('',
         'queryset': Artist.objects.published(),
         'template_object_name': 'artist'}, name='gigs_artist_detail'),
     url(r'^venues/$', views.venue_list, name='gigs_venue_list'),
-    url(r'^venues/(?P<slug>.+)/$', object_detail, {
-        'queryset': Venue.objects.published().select_related(),
-        'template_object_name': 'venue'}, name='gigs_venue_detail'),
+    url(r'^venues/(?P<slug>.+)/$', views.venue_detail,
+        name='gigs_venue_detail'),
     url(r'^towns/$', object_list, town_list_dict, name='gigs_town_list'),
     url(r'^town/(?P<slug>.+)/$', object_detail, {
         'queryset': Town.objects.published(),

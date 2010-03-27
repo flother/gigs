@@ -12,33 +12,19 @@
 	{% if venue.latitude or venue.town.latitude %}
 		<div id="map"></div>
 	{% endif %}
-	{% with venue.gig_set.upcoming as upcoming_gigs %}
-		{% if upcoming_gigs %}
-			{% regroup upcoming_gigs by date|date:"Y m" as upcoming_gigs %}
-			{% for month in upcoming_gigs %}
-				<div class="list">
-					<h2>{{ month.list.0.date|date:"F Y" }}</h2>
-					<ol>
-						{% for gig in month.list %}
-							{% include "gigs/_gig_in_list.html" %}
-						{% endfor %}
-					</ol>
-				</div>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
-	{% with venue.gig_set.past as past_gigs %}
-		{% if past_gigs %}
+	{% if gig_list %}
+		{% regroup gig_list by date|date:"Y m" as gig_list %}
+		{% for month in gig_list %}
 			<div class="list">
-				<h2>Past gigs</h2>
+				<h2>{{ month.list.0.date|date:"F Y" }}</h2>
 				<ol>
 					{% for gig in month.list %}
 						{% include "gigs/_gig_in_list.html" %}
 					{% endfor %}
 				</ol>
 			</div>
-		{% endif %}
-	{% endwith %}
+		{% endfor %}
+	{% endif %}
 {% endblock %}
 
 {% block scripts %}

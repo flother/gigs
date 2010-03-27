@@ -144,3 +144,16 @@ def venue_list(request):
     }
     return render_to_response('gigs/venue_list.html', context,
         RequestContext(request))
+
+
+def venue_detail(request, slug):
+    """Display the details for one particular venue."""
+    venue = get_object_or_404(Venue.objects.published().select_related(),
+        slug=slug)
+    gig_list = venue.gig_set.published().order_by('-date')
+    context = {
+        'venue': venue,
+        'gig_list': gig_list,
+    }
+    return render_to_response('gigs/venue_detail.html', context,
+        RequestContext(request))
