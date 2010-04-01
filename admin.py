@@ -4,6 +4,16 @@ from gigs.models import Gig, Artist, Album, Venue, Town, Promoter,\
     ImportIdentifier
 
 
+class ImportIdentifierAdmin(admin.ModelAdmin):
+
+    """Django ModelAdmin class for the ImportIdentifier model."""
+
+    list_display = ('identifier', 'type')
+    list_filter = ('type',)
+    ordering = ('type', 'identifier')
+    search_fields = ('identifier',)
+
+
 class GigAdmin(admin.ModelAdmin):
 
     """Django ModelAdmin class for the Gig model."""
@@ -125,6 +135,7 @@ class PromoterAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+admin.site.register(ImportIdentifier, ImportIdentifierAdmin)
 admin.site.register(Gig, GigAdmin)
 admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Album, AlbumAdmin)
