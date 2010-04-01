@@ -188,7 +188,7 @@ class Command(NoArgsCommand):
                 logger.debug('Found artist: %s.' % artist)
             except IndexError:
                 artist = Artist.objects.create(name=gig.artist,
-                    slug=slugify(gig.artist))
+                    slug=slugify(gig.artist)[:50])
                 artist.import_identifiers.add(artist_id)
                 artist.save()
                 logger.info('Created artist: %s.' % artist)
@@ -203,7 +203,7 @@ class Command(NoArgsCommand):
                     logger.debug('Found town: %s.' % town)
                 except IndexError:
                     town = Town.objects.create(name=gig.town,
-                        slug=slugify(gig.town))
+                        slug=slugify(gig.town)[:50])
                     town.import_identifiers.add(town_id)
                     town.save()
                     logger.info('Created town: %s.' % town)
@@ -221,7 +221,7 @@ class Command(NoArgsCommand):
                 logger.debug('Found venue: %s.' % venue)
             except IndexError:
                 venue = Venue.objects.create(name=gig.venue,
-                    slug=slugify(gig.venue), town=town)
+                    slug=slugify(gig.venue)[:50], town=town)
                 venue.import_identifiers.add(venue_id)
                 venue.save()
                 logger.info('Created venue: %s.' % venue)
@@ -238,7 +238,7 @@ class Command(NoArgsCommand):
                     logger.debug('Found promoter: %s.' % promoter)
                 except IndexError:
                     promoter = Promoter.objects.create(name=gig.promoter,
-                        slug=slugify(gig.promoter))
+                        slug=slugify(gig.promoter)[:50])
                     promoter.import_identifiers.add(promoter_id)
                     promoter.save()
                     logger.info('Created promoter: %s.' % promoter)
