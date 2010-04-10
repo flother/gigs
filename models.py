@@ -9,7 +9,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Count, permalink
 from django.db.models.signals import post_save
-from django.utils.html import urlize
+from django.utils.html import strip_tags, urlize
 from markdown import markdown
 try:
     from musicbrainz2.webservice import Query, ReleaseFilter, Release
@@ -235,6 +235,73 @@ class Artist(models.Model):
                                     pass  # Date couldn't be parsed.
                                 break
                     db_album.save()
+
+    def get_photo(self):
+        """
+        Attempt to find a photo for this artist.  The Last.fm API is used to
+        find the primary image.  This requires the pylast module; if it isn't
+        found nothing will be done.
+        """
+        # Make sure the pylast module is available.
+        try:
+            pylast
+        except NameError:
+            return False
+        # Create a connection to the Last.fm API.
+        lastfm = pylast.get_lastfm_network(api_key=settings.LASTFM_API_KEY)
+        try:
+            lastfm_artist = lastfm.get_artist(self.name)
+            lastfm_images = lastfm_artist.get_images()
+            primary_image = lastfm_images[0]
+            try:
+                primary_image_url = primary_image.sizes.original
+            except AttributeError:
+                primary_image_url = primary_image['sizes']['original']
+            # Read the image data from the URL supplied.
+            response = urllib2.urlopen(primary_image_url)
+            data = response.read()
+            # Store the photo on disk.
+            filename = os.path.join(settings.MEDIA_ROOT,
+                Artist.PHOTO_UPLOAD_DIRECTORY, '%s.jpg' % self.slug)
+            fh = open(filename, 'w')
+            fh.write(data)
+            fh.close()
+            # Link the photo to the artist (i.e. save the Artist object).
+            self.photo = os.path.join(Artist.PHOTO_UPLOAD_DIRECTORY,
+                '%s.jpg' % self.slug)
+            self.save()
+        except (pylast.WSError, IndexError):
+            pass
+
+
+    def get_biography(self):
+        """Import artist briography from Last.fm."""
+        # Make sure the pylast module is available.
+        try:
+            pylast
+        except NameError:
+            return False
+        # Open a connection to the Last.fm API.
+        lastfm = pylast.get_lastfm_network(api_key=settings.LASTFM_API_KEY)
+        lastfm_artist = lastfm.get_artist(self.name)
+        try:
+            # Get the biography from Last.fm.
+            biography = lastfm_artist.get_bio_content()
+            bio_published_date = lastfm_artist.get_bio_published_date()
+            if bio_published_date:
+                plain_text_biography = strip_tags(biography)
+                # If the biography is different to the saved version or the
+                # artist biography is blank, save the artist's biography.
+                # Note this will overwrite any changes that have been made
+                # to the biography via the admin.
+                if (not plain_text_biography == self.biography and
+                        self.biography == ''):
+                    self.biography = plain_text_biography
+                    self.save()
+        except (pylast.WSError, urllib2.URLError, urllib2.HTTPError):
+            # An error occurs if the artist's name has a character in that
+            # Last.fm doesn't like, or on the occasional dropped connection.
+            pass
 
 
 class Album(models.Model):
@@ -484,6 +551,17 @@ def ensure_gig_slug_matches_artist_slug(sender, **kwargs):
                 gig.slug = artist.slug
                 gig.save()
 post_save.connect(ensure_gig_slug_matches_artist_slug, sender=Artist)
+
+
+def populate_artist_metadata(sender, **kwargs):
+    """
+    Signal receiver; called once an Artist model is saved, populating
+    the artist's photo and biography if the artist is a new creation.
+    """
+    if kwargs['created']:
+        kwargs['instance'].get_photo()
+        kwargs['instance'].get_biography()
+post_save.connect(populate_artist_metadata, sender=Artist)
 
 
 def populate_artist_album_set(sender, **kwargs):
