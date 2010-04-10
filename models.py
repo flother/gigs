@@ -1,11 +1,24 @@
 import base64
 import datetime
+import hashlib
+import os
+import unicodedata
+import urllib2
 
+from django.conf import settings
 from django.db import models
 from django.db.models import Count, permalink
 from django.db.models.signals import post_save
 from django.utils.html import urlize
 from markdown import markdown
+try:
+    from musicbrainz2.webservice import Query, ReleaseFilter, Release
+except ImportError:
+    pass
+try:
+    import pylast
+except ImportError:
+    pass
 
 from gigs.managers import PublishedManager, GigManager
 
@@ -167,6 +180,62 @@ class Artist(models.Model):
             nofollow=False))
         super(Artist, self).save(force_insert, force_update)
 
+    def populate_album_set(self):
+        """
+        Find and create models for all albums released by this artist.
+        Only albums with an Amazon ASIN are imported, to try and stop the
+        database getting clogged up with b-sides, remixes, and bonus
+        material.
+        """
+        # We can't do anything without the MusicBrainz and Last.fm libraries.
+        try:
+            ReleaseFilter
+        except NameError:
+            return False
+        # Find any official album release held by MusicBrainz for this artist.
+        filter = ReleaseFilter(artistName=self.name, releaseTypes=(Release.TYPE_ALBUM,
+            Release.TYPE_OFFICIAL))
+        query = Query()
+        releases = query.getReleases(filter)
+        for release in releases:
+            album = release.release
+            # Only import albums with an Amazon ASIN.  That allows for some
+            # quality-control as Music Brainz lists every B-side and bonus
+            # material you can think of.
+            if album.asin:
+                # First try and find an already-existing album with this ASIN
+                # As an ASIN is unique it means we'll find it even if the fields
+                # have been changed since creation.
+                try:
+                    db_album = Album.objects.get(asin=album.asin)
+                except Album.DoesNotExist:
+                    db_album = Album(artist=self, title=album.title,
+                        asin=album.asin)
+                    # MusicBrainz stores releases dates for as many countries as
+                    # it can.  I'm only interested in Britain though, so look
+                    # for that first.  As a fallback, us the world wide release
+                    # date (XE) or the US release date.
+                    release_dates = dict((r.country, r.date)
+                        for r in album.releaseEvents)
+                    if release_dates:
+                        # GB = United Kingdom, XE = world, US = United States.
+                        for country in ('GB', 'XE', 'US'):
+                            if release_dates.has_key(country):
+                                db_album.released_in = country
+                                # The release date can be in the format "2010",
+                                # "2010-02", or "2010-02-18", so make up the
+                                # missing month and/or day so a proper release
+                                # date object can be created.
+                                release_date = release_dates[country]
+                                date_list = map(int, release_date.split('-'))
+                                try:
+                                    db_album.release_date = datetime.date(
+                                        *date_list + [1] * (3 - len(date_list)))
+                                except ValueError:
+                                    pass  # Date couldn't be parsed.
+                                break
+                    db_album.save()
+
 
 class Album(models.Model):
 
@@ -201,6 +270,34 @@ class Album(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def get_cover_art(self):
+        """Attempt to get the album's cover art from Last.fm."""
+        try:
+            pylast
+        except NameError:
+            return False
+        album_id = unicodedata.normalize('NFKD',
+            unicode(' '.join([self.artist.name, self.title]))).encode('ascii',
+            'ignore')
+        album_hash = hashlib.sha1(album_id).hexdigest()
+        lastfm = pylast.get_lastfm_network(api_key=settings.LASTFM_API_KEY)
+        lastfm_album = lastfm.get_album(self.artist.name, self.title)
+        try:
+            cover_image = lastfm_album.get_cover_image()
+            response = urllib2.urlopen(cover_image)
+            data = response.read()
+            # Store the photo on disk and link the photo to the album.
+            filename = os.path.join(settings.MEDIA_ROOT,
+                Album.PHOTO_UPLOAD_DIRECTORY, '%s.jpg' % album_hash)
+            fh = open(filename, 'w')
+            fh.write(data)
+            fh.close()
+            self.cover_art = os.path.join(Album.PHOTO_UPLOAD_DIRECTORY,
+                '%s.jpg' % album_hash)
+            self.save()
+        except (pylast.WSError, AttributeError, urllib2.HTTPError):
+            pass
 
 
 class Venue(models.Model):
@@ -387,3 +484,23 @@ def ensure_gig_slug_matches_artist_slug(sender, **kwargs):
                 gig.slug = artist.slug
                 gig.save()
 post_save.connect(ensure_gig_slug_matches_artist_slug, sender=Artist)
+
+
+def populate_artist_album_set(sender, **kwargs):
+    """
+    Signal receiver; called once an Artist model is saved, populating
+    the artist's set of albums if the artist is a new creation.
+    """
+    if kwargs['created']:
+        kwargs['instance'].populate_album_set()
+post_save.connect(populate_artist_album_set, sender=Artist)
+
+
+def get_album_cover_art(sender, **kwargs):
+    """
+    Signal receiver; called once an Album model is saved, getting the
+    album's cover art from Last.fm if it can.
+    """
+    if kwargs['created']:
+        kwargs['instance'].get_cover_art()
+post_save.connect(get_album_cover_art, sender=Album)
