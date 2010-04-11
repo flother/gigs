@@ -267,13 +267,28 @@ class Command(NoArgsCommand):
                     db_gig.save()
                     logger.debug("Updated the gig's cancelled flag.")
             except IndexError:
-                db_gig = Gig.objects.create(artist=artist, slug=artist.slug,
-                    venue=venue, promoter=promoter, date=gig.date,
-                    price=gig.price, sold_out=gig.sold_out,
-                    cancelled=gig.cancelled, extra_information=gig.info)
+                # Check to see if a gig by the same artist is happening on the
+                # same day already.  If there is, this new gig is likely to be
+                # that gig at a changed venue.
+                try:
+                    db_gig = Gig.objects.get(artist=artist, date=gig.date)
+                    logger.info('Gig changed venue: %s -> %s' % (db_gig, venue))
+                    db_gig.promoter = promoter
+                    db_gig.price = gig.price
+                    db_gig.sold_out = gig.sold_out
+                    db_gig.cancelled = gig.cancelled
+                    db_gig.extra_information = "%s. Venue changed from %s to %s." % (
+                        gig.info, db_gig.venue.name, venue.name)
+                    db_gig.venue = venue
+                except Gig.DoesNotExist:
+                    # This is definitely a new gig we have here.
+                    db_gig = Gig.objects.create(artist=artist, slug=artist.slug,
+                        venue=venue, promoter=promoter, date=gig.date,
+                        price=gig.price, sold_out=gig.sold_out,
+                        cancelled=gig.cancelled, extra_information=gig.info)
+                    logger.info('Gig created: %s.' % db_gig)
                 db_gig.import_identifiers.add(gig_id)
                 db_gig.save()
-                logger.info('Gig created: %s.' % db_gig)
         logger.info('Import complete.')
         # Finally, save every Artist, Venue, Town, and Promoter object.  This is
         # a brute-force way of making sure every object's
