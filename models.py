@@ -294,7 +294,7 @@ class Artist(models.Model):
                 # artist biography is blank, save the artist's biography.
                 # Note this will overwrite any changes that have been made
                 # to the biography via the admin.
-                if (not plain_text_biography == self.biography and
+                if (not plain_text_biography == self.biography or
                         self.biography == ''):
                     self.biography = plain_text_biography
                     self.save()
