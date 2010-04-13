@@ -3,31 +3,32 @@
 ================================================================================
 
 
-The ``gigs`` package is a standalone Django app that transforms gigs listed on
-the `web site of the Edinburgh institution Ripping Records`_ and into a set of
-database models: ``Gig``, ``Artist``, ``Album``, ``Venue``, ``Town``, and
-``Promoter``.
+The ``gigs`` package is a standalone Django app that screen-scrapes gigs listed
+on the `web site of the Edinburgh institution Ripping Records`_, turning them
+into a set of database models: ``Gig``, ``Artist``, ``Album``, ``Venue``,
+``Town``, and ``Promoter``.
 
 .. _web site of the Edinburgh institution Ripping Records: http://www.rippingrecords.com/tickets01.html
-
-
-.. contents::
 
 
 How the screen scraping works
 ===============================
 
-Although the information is collected through screen scraping it isn't done
-directly.  Google Docs has a fantastic spreadsheets function named
-``ImportHtml`` that allows you to take a list or table from any web page and
-make it a spreadsheet.  To screen scrape the information create a new
-spreadsheet and in cell A1 type::
+Although the information is collected through screen scraping the Ripping
+Records web site, it isn't done directly.
+
+Google Docs has a fantastic spreadsheets function named ``ImportHtml`` that
+allows you to take a list or table from any web page and convert it into a
+spreadsheet.
+
+If you wan to scrape the information yourself create a new spreadsheet and in
+cell A1 type::
 
     =ImportHtml("http://rippingrecords.com/tickets01.html", "table", 1)
 
 Hit enter and the spreadsheet will be filled with the gigs information and will
-update every hour.  From there click the *Share* button in the top right and
-select *Publish as a web page* from the drop-down menu.  Choose to publish
+update roughly every hour.  From there click the *Share* button in the top right
+and select *Publish as a web page* from the drop-down menu.  Choose to publish
 Sheet 1 only, tick *Automatically republish when changes are made*, and then
 click *Start publishing*.
 
@@ -54,16 +55,14 @@ Optional libraries
 * musicbrainz2 0.7.0: http://musicbrainz.org/doc/PythonMusicBrainz2
 * Haystack 1.0.1: http://haystacksearch.org/
 
-There's a management command, ``import_artist_photos``, that attempts to find
-and download a photo for each artist that doesn't yet have one.  It's entirely
-your choice as to whether you use this command, but if you do you'll need the
-``pylast`` module installed.
+When a new artist is created the `Last.fm`_ and `MusicBrainz`_ APIs are used to
+find the artist's photos, biographies, albums, and cover art.  This requires the
+``pylast`` and ``musicbrainz2`` libraries.  If you don't install them you won't
+see any errors (the code fails gracefully) but you won't get the artist metadata
+either.
 
-Another management command, ``import_albums``, imports all official album
-releases for each artist in the database from MusicBrainz.  It also attempts to
-find the cover art for the imported albums from Last.fm.  Again, it's entirely
-you choice whether you use it or not, but if you do you'll need both ``pylast``
-and ``musicbrainz2`` installed.
+.. _Last.fm: http://www.last.fm/api
+.. _MusicBrainz: http://musicbrainz.org/doc/XML_Web_Service
 
 The ``action`` element on the home page's search form links to
 ``{% url haystack_search %}``, and Haystack search indexes are included in
@@ -199,9 +198,12 @@ model object.
 Functionality left to implement
 =================================
 
-The data import is complete but the app is missing views and templates for
-outputting the data outside the Django admin app.  This is in progress.
+The code is in a complete state and can been seen running at
+`rippedrecords.com`_.  There are some ideas for future additions — XML feeds for
+venues, towns, and bands, and linking similar gigs to one another — but the code
+can be, for now, considered feature-complete.
 
+.. _rippedrecords.com: http://www.rippedrecords.com/
 
 Get in touch
 ==============
