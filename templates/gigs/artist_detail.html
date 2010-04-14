@@ -42,7 +42,7 @@
 	{% endif %}
 	{% if artist.biography_html %}
 		<div id="biography_and_photo">
-			{% thumbnail artist.photo 340x238 crop="0,0" bw upscale as artist_thumb %}
+			{% thumbnail artist.photo 340x238 crop="0,0" upscale as artist_thumb %}
 			<img alt="Photo of {{ artist.name }}" height="238" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_340x238.jpg{% endif %}" width="340" />
 			<div id="biography">
 				{{ artist.biography_html|safe }}

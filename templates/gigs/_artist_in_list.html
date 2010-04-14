@@ -1,7 +1,7 @@
 {% load thumbnail typography %}
 <li>
 	<a href="{{ artist.get_absolute_url }}" title="See all gigs for {{ artist.name }}">
-		{% thumbnail artist.photo 63x63 crop="0,0" bw upscale as artist_thumb %}
+		{% thumbnail artist.photo 63x63 crop="0,0" upscale as artist_thumb %}
 		<img alt="Photo of {{ artist.name }}" height="63" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_63x63.jpg{% endif %}" width="63">
 		{{ artist.name|truncate }}
 	</a>
