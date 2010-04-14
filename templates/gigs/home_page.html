@@ -5,13 +5,6 @@
 {% block body_id %}home{% endblock %}
 
 {% block body %}
-	<form action="{% url haystack_search %}" id="site_search" method="get">
-		<fieldset>
-			<label for="id_q">Search gigs, artists, and venues</label>
-			<input id="id_q" name="q" type="text">
-			<button type="submit">Search</button>
-		</fieldset>
-	</form>
 	<ol id="upcoming_gigs">
 		{% for gig in closest_gigs %}
 			{% thumbnail gig.artist.photo 220x147 crop="0,0" upscale as gig_thumb %}
