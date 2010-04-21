@@ -25,11 +25,11 @@ def home_page(request):
     start_of_week_after_next = start_of_next_week + one_week
 
     # Create four lists: the eight gigs happening soonest (minus those that are
-    # sold out and whose artist doesn't have a photo), gigs happening this week
-    # (Monday to Sunday; ignoring days already passed), gigs happening next
-    # week (Monday to Sunday), and the 15 gigs most recently added to the
-    # database.
-    closest_gigs = Gig.objects.upcoming(sold_out=False).exclude(
+    # sold out or cancelled and whose artist doesn't have a photo), gigs
+    # happening this week (Monday to Sunday; ignoring days already passed), gigs
+    # happening next week (Monday to Sunday), and the 15 gigs most recently
+    # added to the database.
+    closest_gigs = Gig.objects.upcoming(sold_out=False, cancelled=False).exclude(
         artist__photo='').select_related()[:8]
     gigs_this_week = Gig.objects.upcoming(
         date__lt=start_of_next_week).select_related()
