@@ -159,8 +159,8 @@ There are three management commands included with this app, found in
 
 * ``import_albums``: imports albums from MusicBrainz for each artist.  Cover art
   for imported albums is also imported from Last.fm.
-* ``import_artist_photos``: imports a single photo for each artist from Last.fm.
-* ``import_artist_metadata``: import a biography for each artist from Last.fm.
+* ``import_artist_metadata``: import a photo and biography for each artist from
+  Last.fm.
 * ``import_gigs_from_ripping_records``: the main management command that imports
   all gigs occurring in Edinburgh and Glasgow from the Ripping Records web site.
   This command is detailed in the section `Importing the gigs data`_ below.
@@ -198,10 +198,15 @@ model object.
 Functionality left to implement
 =================================
 
-The code is in a complete state and can been seen running at
-`rippedrecords.com`_.  There are some ideas for future additions — XML feeds for
-venues, towns, and bands, and linking similar gigs to one another — but the code
-can be, for now, considered feature-complete.
+The code is in a working state and can been seen running at
+`rippedrecords.com`_.  However, as always, there are always improvements to be
+made.  Some that I hope will make there way in soon are:
+
+* XML feeds for venues, towns, and artists
+* Linking similar gigs to one another
+* XML sitemap
+* Twitter @anywhere integration
+* Mark all strings for translation
 
 .. _rippedrecords.com: http://www.rippedrecords.com/
 
