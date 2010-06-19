@@ -5,8 +5,18 @@ from django.views.generic.list_detail import object_list, object_detail
 
 from gigs.feeds import LatestGigs, ArtistGigFeed, VenueGigFeed, TownGigFeed
 from gigs.models import Gig, Artist, Town, Promoter
+from gigs.sitemaps import GigSitemap, ArtistSitemap, VenueSitemap, TownSitemap,\
+    PromoterSitemap
 from gigs import views
 
+
+sitemaps = {
+    'gigs': GigSitemap,
+    'artists': ArtistSitemap,
+    'venues': VenueSitemap,
+    'towns': TownSitemap,
+    'promoter': PromoterSitemap,
+}
 
 feeds = {
     'latest-gigs': LatestGigs,
@@ -67,6 +77,8 @@ urlpatterns = patterns('',
     url(r'^promoters/(?P<slug>.+)/$', object_detail, {
         'queryset': Promoter.objects.published(),
         'template_object_name': 'promoter'}, name='gigs_promoter_detail'),
+    (r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps}),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
         {'feed_dict': feeds}, name='gigs_feeds'),
 )
