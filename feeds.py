@@ -7,7 +7,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
 
-from gigs.models import Gig, Artist, Venue
+from gigs.models import Gig, Artist, Venue, Town
 
 
 class LatestGigs(Feed):
@@ -107,6 +107,43 @@ class VenueGigFeed(Feed):
         Return a list of all published gigs for the venue.
         """
         return obj.gig_set.published(date__gte=datetime.date.today())
+
+    def item_link(self, item):
+        return item.get_absolute_url()
+
+    def item_pubdate(self, item):
+        return item.created
+
+
+class TownGigFeed(Feed):
+
+    """Feed class to represent each indivdual town."""
+
+    feed_type = Atom1Feed
+    author_name = 'Ripped Records'
+    description_template = "feeds/gig_description.html"
+
+    def get_object(self, params):
+        """
+        Return the town that matches the given slug.
+        """
+        if len(params) != 1:
+            raise Http404
+        return get_object_or_404(Town.objects.select_related(),
+            slug=params[0])
+
+    def title(self, obj):
+        return "Upcoming gigs in %s" % obj.name
+
+    def link(self, obj):
+        return reverse(feed, kwargs={"url": "towns/%s" % obj.slug})
+
+    def items(self, obj):
+        """
+        Return a list of all published gigs for the town.
+        """
+        return Gig.objects.published(venue__town=obj,
+            date__gte=datetime.date.today())
 
     def item_link(self, item):
         return item.get_absolute_url()
