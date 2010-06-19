@@ -9,6 +9,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Count, permalink
 from django.db.models.signals import post_save
+from django.utils.dateformat import format
 from django.utils.html import strip_tags, urlize
 from markdown import markdown
 try:
@@ -90,7 +91,8 @@ class Gig(models.Model):
         unique_together = (('artist', 'venue', 'date'),)
 
     def __unicode__(self):
-        return "%s at %s on %s" % (self.artist, self.venue, self.date)
+        return "%s at %s on %s" % (self.artist, self.venue,
+            format(self.date, settings.DATE_FORMAT))
 
     @permalink
     def get_absolute_url(self):
