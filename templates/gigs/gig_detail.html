@@ -34,7 +34,7 @@
 		<h2>{% if gig.cancelled or gig.sold_out %}Buying tickets{% else %}<a href="/buy-tickets/" title="Find out more about buying {{ gig.artist }} tickets">Want a ticket?</a>{% endif %}</h2>
 		<p>You can buy tickets for {% if gig.cancelled or gig.sold_out %}other gigs{% else %}{{ gig.artist }}{% endif %} by phone or in person from Ripping Records in Edinburgh. <a href="/buy-tickets/" title="Find out more about buying {{ gig.artist }} tickets">Find out more</a>.</p>
 	</div>
-	{% thumbnail gig.artist.photo 340x238 crop="0,0" upscale as artist_thumb %}
+	{% thumbnail gig.artist.photo 340x238 crop="0,0" upscale bw as artist_thumb %}
 	<img alt="Photo of {{ gig.artist.name }}" height="238" id="photo" src="{% if artist_thumb %}{{ artist_thumb }}{% else %}{{ MEDIA_URL }}gigs/img/default_artist_340x238.jpg{% endif %}" width="340" />
 	<dl>
 		<dt>Who</dt>
