@@ -66,9 +66,6 @@ class ArtistGigFeed(Feed):
     def link(self, obj):
         return reverse(feed, kwargs={"url": "artists/%s" % obj.slug})
 
-    def description(self, obj):
-        return "Gigs played by %s in Edinburgh and Glasgow, Scotland" % obj.name
-
     def items(self, obj):
         """
         Return a list of all published gigs for the artist.
@@ -100,13 +97,10 @@ class VenueGigFeed(Feed):
             slug=params[0])
 
     def title(self, obj):
-        return "%s's gigs in Edinburgh and Glasgow" % obj.name
+        return "Gigs happening at %s, %s" % (obj.name, obj.town)
 
     def link(self, obj):
         return reverse(feed, kwargs={"url": "venues/%s" % obj.slug})
-
-    def description(self, obj):
-        return "Gigs happening at %s, %s" % (obj.name, obj.town)
 
     def items(self, obj):
         """
