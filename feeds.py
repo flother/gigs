@@ -73,7 +73,7 @@ class ArtistGigFeed(Feed):
         """
         Return a list of all published gigs for the artist.
         """
-        return obj.gig_set.published()
+        return obj.gig_set.published(date__gte=datetime.date.today())
 
     def item_link(self, item):
         return item.get_absolute_url()
