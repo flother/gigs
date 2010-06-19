@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.syndication.feeds import Feed
 from django.contrib.syndication.views import feed
 from django.core.urlresolvers import reverse
@@ -5,7 +7,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
 
-from gigs.models import Gig, Artist
+from gigs.models import Gig, Artist, Venue
 
 
 class LatestGigs(Feed):
@@ -47,7 +49,7 @@ class ArtistGigFeed(Feed):
 
     feed_type = Atom1Feed
     author_name = 'Ripped Records'
-    description_template = "feeds/artist_gig_description.html"
+    description_template = "feeds/gig_description.html"
 
     def get_object(self, params):
         """
@@ -80,8 +82,40 @@ class ArtistGigFeed(Feed):
         return item.created
 
 
+class VenueGigFeed(Feed):
 
+    """Feed class to represent each indivdual venue."""
 
+    feed_type = Atom1Feed
+    author_name = 'Ripped Records'
+    description_template = "feeds/gig_description.html"
 
+    def get_object(self, params):
+        """
+        Return the venue that matches the given slug.
+        """
+        if len(params) != 1:
+            raise Http404
+        return get_object_or_404(Venue.objects.select_related(),
+            slug=params[0])
 
+    def title(self, obj):
+        return "%s's gigs in Edinburgh and Glasgow" % obj.name
 
+    def link(self, obj):
+        return reverse(feed, kwargs={"url": "venues/%s" % obj.slug})
+
+    def description(self, obj):
+        return "Gigs happening at %s, %s" % (obj.name, obj.town)
+
+    def items(self, obj):
+        """
+        Return a list of all published gigs for the venue.
+        """
+        return obj.gig_set.published(date__gte=datetime.date.today())
+
+    def item_link(self, item):
+        return item.get_absolute_url()
+
+    def item_pubdate(self, item):
+        return item.created
