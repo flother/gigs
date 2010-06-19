@@ -202,11 +202,9 @@ The code is in a working state and can been seen running at
 `rippedrecords.com`_.  However, as always, there are always improvements to be
 made.  Some that I hope will make there way in soon are:
 
-* XML feeds for venues, towns, and artists
 * Linking similar gigs to one another
-* XML sitemap
-* Twitter @anywhere integration
 * Mark all strings for translation
+* Functionality to allow people to email a page's URL to a friend
 
 .. _rippedrecords.com: http://www.rippedrecords.com/
 
