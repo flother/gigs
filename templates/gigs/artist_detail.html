@@ -3,6 +3,10 @@
 
 {% block title %}{{ artist.name }}{% endblock %}
 {% block content_title %}{{ artist.name }}{% endblock %}
+{% block extra_head %}
+	<link href="{% url gigs_feeds "artists" %}{{ artist.slug }}/" rel="alternate" type="application/rss+xml" title="Feed for {{ artist.title }}" />
+	{{ block.super }}
+{% endblock %}
 {% block body_id %}artist{% endblock %}
 
 {% block content_intro %}

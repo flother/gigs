@@ -1,0 +1,21 @@
+{{ obj.artist.name }} at {{ obj.venue }} on {{ obj.date|date }} ({% if obj.cancelled %}cancelled{% else %}{% if obj.sold_out %}sold out{% else %}<a href="/buy-tickets/" title="Find out more about buying {{ obj.artist }} tickets">tickets £{{ obj.price|stringformat:"0.2f" }}</a>{% endif %}{% endif %})
+<dl>
+	<dt>Who</dt>
+	<dd>
+		<a href="{{ obj.artist.get_absolute_url }}">{{ obj.artist.name }}</a>
+	</dd>
+	<dt>When</dt>
+	<dd>{{ obj.date|date }}</dd>
+	<dt>Where</dt>
+	<dd>
+		<a href="{{ obj.venue.get_absolute_url }}">{{ obj.venue.name }}</a>{% if obj.venue.address %}<br />{{ obj.venue.address }}{% endif %}, <a href="{{ obj.venue.town.get_absolute_url }}">{{ obj.venue.town }}</a>
+	</dd>
+	{% if obj.promoter %}
+		<dt>Promoter</dt>
+		<dd><a href="{{ obj.promoter.get_absolute_url }}">{{ obj.promoter.name }}</a></dd>
+	{% endif %}
+	{% if obj.extra_information %}
+		<dt>Extra info</dt>
+		<dd>{{ obj.extra_information|capfirst }}</dd>
+	{% endif %}
+</dl>

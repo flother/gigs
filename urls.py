@@ -3,13 +3,14 @@ from django.views.generic.date_based import archive_year, archive_month,\
     archive_day
 from django.views.generic.list_detail import object_list, object_detail
 
-from gigs.feeds import LatestGigs
+from gigs.feeds import LatestGigs, ArtistGigFeed
 from gigs.models import Gig, Artist, Town, Promoter
 from gigs import views
 
 
 feeds = {
     'latest-gigs': LatestGigs,
+    'artists': ArtistGigFeed,
 }
 
 
