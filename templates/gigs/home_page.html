@@ -2,6 +2,11 @@
 {% load thumbnail typography %}
 
 {% block title %}Live music in Edinburgh and Glasgow, Scotland{% endblock %}
+{% block extra_head %}
+	<link href="{% url gigs_feeds "latest-gigs" %}" rel="alternate" type="application/rss+xml" title="Latest gigs" />
+	{{ block.super }}
+{% endblock %}
+
 {% block body_id %}home{% endblock %}
 
 {% block body %}
