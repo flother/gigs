@@ -65,8 +65,7 @@ class RippedGig(object):
         self.venue = venue_and_promoter_match.group('venue')
         self.town = venue_and_promoter_match.group('town')
         self.promoter = venue_and_promoter_match.group('promoter')
-
-        self.date = self._make_usable_string(date)
+        self.date = date
 
         # Price(s) and extra info are stored in one field, so they're
         # separated here.  There can be zero or more prices, and the
