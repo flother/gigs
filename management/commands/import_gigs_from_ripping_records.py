@@ -266,18 +266,25 @@ class Command(NoArgsCommand):
                     db_gig.save()
                     logger.debug("Updated the gig's cancelled flag.")
             except IndexError:
-                # Check to see if a gig by the same artist is happening on the
-                # same day already.  If there is, this new gig is likely to be
-                # that gig at a changed venue.
+                # Check to see if a gig by the same artist is already
+                # happening on the same day in a different venue.  If there
+                # is, this new gig is likely to be that gig at a changed
+                # venue.
                 try:
-                    db_gig = Gig.objects.get(artist=artist, date=gig.date)
+                    db_gig = Gig.objects.exclude(venue=venue).get(
+                        artist=artist, date=gig.date)
                     logger.info('Gig changed venue: %s -> %s' % (db_gig, venue))
                     db_gig.promoter = promoter
                     db_gig.price = gig.price
                     db_gig.sold_out = gig.sold_out
                     db_gig.cancelled = gig.cancelled
-                    db_gig.extra_information = "%s. Venue changed from %s to %s." % (
-                        gig.info, db_gig.venue.name, venue.name)
+                    info_string = "Venue changed from %s to %s." % (
+                        db_gig.venue.name, venue.name)
+                    if gig.info:
+                        db_gig.extra_information = "%s. %s" % (gig.info,
+                            info_string)
+                    else:
+                        db_gig.extra_information = info_string
                     db_gig.venue = venue
                 except Gig.DoesNotExist:
                     # This is definitely a new gig we have here.
