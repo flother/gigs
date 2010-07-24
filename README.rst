@@ -175,11 +175,13 @@ cron job, e.g.::
 
     django-admin.py import_gigs_from_ripping_records
 
-By default the command only outputs to ``stdout`` when a ``Gig``, ``Artist``,
-``Venue``, ``Town``, or ``Promoter`` model is created but you can get reams of
-debug information if you set the verbosity level to 2::
+The command uses Python's standard ``logging`` module.  If you want to use
+logging (for example, to output to ``stdout`` or to a file), create a file
+called ``logging.conf`` in your project's root directory and set up a logger
+called ``RippedRecordsLogger`` as you see fit.  The online Python documentation
+includes `information on using Python logging`_.
 
-    django-admin.py import_gigs_from_ripping_records --verbosity=2
+.. _`information on using Python logging`: http://docs.python.org/library/logging.html
 
 
 Notes on the data import

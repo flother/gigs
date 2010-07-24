@@ -1,6 +1,7 @@
 import csv
 import datetime
 import logging
+import logging.config
 import re
 import unicodedata
 import urllib2
@@ -12,7 +13,6 @@ from django.core.management.base import NoArgsCommand
 from gigs.models import Gig, Artist, Venue, Town, Promoter, ImportIdentifier
 
 
-LOGGING_VERBOSITY = {0: logging.CRITICAL, 1: logging.INFO, 2: logging.DEBUG}
 CURRENT_YEAR = datetime.date.today().year
 MONTHS = {
     'JANUARY': 1, 'FEBRUARY': 2, 'MARCH': 3, 'APRIL': 4, 'MAY': 5, 'JUNE': 6,
@@ -114,13 +114,8 @@ class Command(NoArgsCommand):
         Original data: http://rippingrecords.com/tickets01.html.
         """
         # Create the logger we'll use to store all the output.
-        verbosity = int(options.get('verbosity', 1))
-        logger = logging.getLogger('Ripped Records logger')
-        logger.setLevel(LOGGING_VERBOSITY[verbosity])
-        logger_handler = logging.StreamHandler()
-        logger_formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
-        logger_handler.setFormatter(logger_formatter)
-        logger.addHandler(logger_handler)
+        logging.config.fileConfig("logging.conf")
+        logger = logging.getLogger('RippedRecordsLogger')
         logger.info('Importing gigs from the Ripping Records spreadsheet.')
 
         # Get the CSV data from Google Docs.
