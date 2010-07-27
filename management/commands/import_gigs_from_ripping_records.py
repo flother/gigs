@@ -172,7 +172,7 @@ class Command(NoArgsCommand):
         # That's the import done.  Now let's convert all the gigs into lovely
         # Django models.
         for gig in gigs:
-            logger.debug('Processing gig: %s at %s on %s.' % (gig.artist,
+            logger.info('Processing gig: %s at %s on %s.' % (gig.artist,
                 gig.venue, gig.date))
             # Find or create the gig's artist.
             artist_id, created = ImportIdentifier.objects.get_or_create(
@@ -249,7 +249,7 @@ class Command(NoArgsCommand):
                 type=ImportIdentifier.GIG_IMPORT_TYPE)
             try:
                 db_gig = gig_id.gig_set.all()[0]
-                logger.debug('Gig already exists.')
+                logger.info('Gig already exists.')
                 # If the gig already exists make sure it's marked appropriately
                 # as sold out, cancelled, or not.
                 if not db_gig.sold_out == gig.sold_out:
