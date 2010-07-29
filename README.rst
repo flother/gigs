@@ -59,7 +59,8 @@ When a new artist is created the `Last.fm`_ and `MusicBrainz`_ APIs are used to
 find the artist's photos, biographies, albums, and cover art.  This requires the
 ``pylast`` and ``musicbrainz2`` libraries.  If you don't install them you won't
 see any errors (the code fails gracefully) but you won't get the artist metadata
-either.
+either.  The same goes for the ``link_similar_artists`` command: no ``pylast``,
+no similar artists.
 
 .. _Last.fm: http://www.last.fm/api
 .. _MusicBrainz: http://musicbrainz.org/doc/XML_Web_Service
@@ -92,8 +93,9 @@ Include the gigs app in your project's ``INSTALLED_APPS``::
         'gigs',
     )
 
-If you intend to use the ``import_artist_photos`` management command you'll need
-to include your Last.fm API key in your Django project's settings::
+If you intend to use either the ``import_artist_photos`` or
+``link_similar_artists`` management command you'll need to include your Last.fm
+API key in your Django project's settings::
 
   LASTFM_API_KEY = 'YOUR_API_KEY_HERE'
 
@@ -154,7 +156,7 @@ be available.  You must define the following:
 Management commands
 =====================
 
-There are three management commands included with this app, found in
+There are four management commands included with this app, found in
 ``gigs.management.commands`` and available to use via ``django-admin.py``.
 
 * ``import_albums``: imports albums from MusicBrainz for each artist.  Cover art
@@ -164,6 +166,9 @@ There are three management commands included with this app, found in
 * ``import_gigs_from_ripping_records``: the main management command that imports
   all gigs occurring in Edinburgh and Glasgow from the Ripping Records web site.
   This command is detailed in the section `Importing the gigs data`_ below.
+* ``link_similar_artists``: uses the Last.fm API to connect similar artists in
+  the site database.  Run this after an import and you'll see recommended
+  artists and gigs in your templates.
 
 
 Importing the gigs data
@@ -204,7 +209,6 @@ The code is in a working state and can been seen running at
 `rippedrecords.com`_.  However, as always, there are always improvements to be
 made.  Some that I hope will make there way in soon are:
 
-* Linking similar gigs to one another
 * Mark all strings for translation
 * Functionality to allow people to email a page's URL to a friend
 
