@@ -120,6 +120,16 @@ class Gig(models.Model):
         """Return True if the gig date has passed, False otherwise."""
         return self.date < datetime.date.today()
 
+    def similar_upcoming_gigs(self):
+        """
+        Return a list of upcoming gigs similar to this one, based on
+        artist similarity.  The list is ordered soonest first.
+        """
+        similar_gig_ids = sum([[g["id"] for g in
+            a.gig_set.upcoming().values("id")] for a in
+            self.artist.similar_artists.published()], [])
+        return Gig.objects.filter(id__in=similar_gig_ids).order_by("date")
+
 
 class Artist(models.Model):
 
@@ -133,6 +143,7 @@ class Artist(models.Model):
     biography_html = models.TextField(blank=True, editable=False)
     photo = models.ImageField(upload_to=PHOTO_UPLOAD_DIRECTORY, blank=True)
     web_site = models.URLField(blank=True)
+    similar_artists = models.ManyToManyField("self", symmetrical=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)

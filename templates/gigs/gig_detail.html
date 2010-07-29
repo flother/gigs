@@ -87,6 +87,20 @@
 			</div>
 		{% endif %}
 	{% endwith %}
+	{% with gig.similar_upcoming_gigs as similar_gigs %}
+		{% if similar_gigs %}
+			<div class="list">
+				<h2>Other gigs you may like</h2>
+				<ol>
+					{% for similar_gig in similar_gigs %}
+						{% with similar_gig as gig %}{% with gig.artist as artist %}
+							{% include "gigs/_gig_in_list.html" %}
+						{% endwith %}{% endwith %}
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
+	{% endwith %}
 {% endblock %}
 
 {% block scripts %}
