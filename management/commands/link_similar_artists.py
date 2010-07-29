@@ -3,7 +3,10 @@ import logging.config
 
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
-import pylast
+try:
+    import pylast
+except ImportError:
+    pass
 
 from gigs.models import Artist
 
@@ -16,6 +19,10 @@ class Command(NoArgsCommand):
         Use the Last.fm API to link similar artists.  The similarity is
         based in listenership.
         """
+        try:
+            pylast
+        except NameError:
+            return False
         # Create the logger we'll use to store all the output.
         logging.config.fileConfig("logging.conf")
         logger = logging.getLogger('RippedRecordsLogger')
