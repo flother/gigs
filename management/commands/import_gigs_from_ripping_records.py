@@ -7,8 +7,9 @@ import unicodedata
 import urllib2
 
 from django.conf import settings
-from django.template.defaultfilters import slugify
 from django.core.management.base import NoArgsCommand
+from django.db import DatabaseError
+from django.template.defaultfilters import slugify
 
 from gigs.models import Gig, Artist, Venue, Town, Promoter, ImportIdentifier
 
@@ -181,11 +182,20 @@ class Command(NoArgsCommand):
                 artist = artist_id.artist_set.all()[0]
                 logger.debug('Found artist: %s.' % artist)
             except IndexError:
-                artist = Artist.objects.create(name=gig.artist,
-                    slug=slugify(gig.artist)[:50])
-                artist.import_identifiers.add(artist_id)
-                artist.save()
-                logger.info('Created artist: %s.' % artist)
+                artist_slug = slugify(gig.artist)[:50]
+                try:
+                    artist = Artist.objects.create(name=gig.artist,
+                        slug=artist_slug)
+                    artist.import_identifiers.add(artist_id)
+                    artist.save()
+                    logger.info('Created artist: %s.' % artist)
+                except DatabaseError:
+                    # The database couldn't save the artist.  This is
+                    # usually because an artist with the same slug exists
+                    # (i.e. the artist's name is unique but it matches
+                    # another artist's slug).
+                    logger.critical("Failed to save artist %s with slug '%s'."
+                        % (gig.artist, artist_slug))
 
             # Find or create the gig's town.  Occasionally this isn't included
             # in the Ripping Records table row for the gig.
@@ -196,11 +206,20 @@ class Command(NoArgsCommand):
                     town = town_id.town_set.all()[0]
                     logger.debug('Found town: %s.' % town)
                 except IndexError:
-                    town = Town.objects.create(name=gig.town,
-                        slug=slugify(gig.town)[:50])
-                    town.import_identifiers.add(town_id)
-                    town.save()
-                    logger.info('Created town: %s.' % town)
+                    town_slug = slugify(gig.town)[:50]
+                    try:
+                        town = Town.objects.create(name=gig.town,
+                            slug=town_slug)
+                        town.import_identifiers.add(town_id)
+                        town.save()
+                        logger.info('Created town: %s.' % town)
+                    except DatabaseError:
+                        # The database couldn't save the town.  This is usually
+                        # because a town with the same slug exists (i.e. the
+                        # town's name is unique but it matches another town's
+                        # slug).
+                        logger.critical("Failed to save town %s with slug '%s'."
+                            % (gig.town, town_slug))
             else:
                 # Sometimes the town isn't included, so just assume it's
                 # Edinburgh and change it manually later.
@@ -214,11 +233,20 @@ class Command(NoArgsCommand):
                 venue = venue_id.venue_set.all()[0]
                 logger.debug('Found venue: %s.' % venue)
             except IndexError:
-                venue = Venue.objects.create(name=gig.venue,
-                    slug=slugify(gig.venue)[:50], town=town)
-                venue.import_identifiers.add(venue_id)
-                venue.save()
-                logger.info('Created venue: %s.' % venue)
+                venue_slug = slugify(gig.venue)[:50]
+                try:
+                    venue = Venue.objects.create(name=gig.venue,
+                        slug=venue_slug, town=town)
+                    venue.import_identifiers.add(venue_id)
+                    venue.save()
+                    logger.info('Created venue: %s.' % venue)
+                except DatabaseError:
+                    # The database couldn't save the venue.  This is usually
+                    # because a venue with the same slug exists (i.e. the
+                    # venue's name is unique but it matches another venue's
+                    # slug).
+                    logger.critical("Failed to save venue %s with slug '%s'."
+                        % (gig.venue, venue_slug))
 
             # Find or create the promoter. The promoter isn't always listed for
             # a gig, so only create it exists.
@@ -231,11 +259,20 @@ class Command(NoArgsCommand):
                     promoter = promoter_id.promoter_set.all()[0]
                     logger.debug('Found promoter: %s.' % promoter)
                 except IndexError:
-                    promoter = Promoter.objects.create(name=gig.promoter,
-                        slug=slugify(gig.promoter)[:50])
-                    promoter.import_identifiers.add(promoter_id)
-                    promoter.save()
-                    logger.info('Created promoter: %s.' % promoter)
+                    promoter_slug = slugify(gig.promoter)[:50]
+                    try:
+                        promoter = Promoter.objects.create(name=gig.promoter,
+                            slug=promoter_slug)
+                        promoter.import_identifiers.add(promoter_id)
+                        promoter.save()
+                        logger.info('Created promoter: %s.' % promoter)
+                    except DatabaseError:
+                        # The database couldn't save the promoter.  This is
+                        # usually because a promoter with the same slug exists
+                        # (i.e. the promoter's name is unique but it matches
+                        # another promoter's slug).
+                        logger.critical("Failed to save promoter %s with slug '%s'."
+                            % (gig.promoter, promoter_slug))
             else:
                 logger.debug('No promoter found.')
 
@@ -283,13 +320,20 @@ class Command(NoArgsCommand):
                     db_gig.venue = venue
                 except Gig.DoesNotExist:
                     # This is definitely a new gig we have here.
-                    db_gig = Gig.objects.create(artist=artist, slug=artist.slug,
-                        venue=venue, promoter=promoter, date=gig.date,
-                        price=gig.price, sold_out=gig.sold_out,
-                        cancelled=gig.cancelled, extra_information=gig.info)
-                    logger.info('Gig created: %s.' % db_gig)
-                db_gig.import_identifiers.add(gig_id)
-                db_gig.save()
+                    try:
+                        db_gig = Gig.objects.create(artist=artist,
+                            slug=artist.slug, venue=venue, promoter=promoter,
+                            date=gig.date, price=gig.price,
+                            sold_out=gig.sold_out, cancelled=gig.cancelled,
+                            extra_information=gig.info)
+                        logger.info('Gig created: %s.' % db_gig)
+                        db_gig.import_identifiers.add(gig_id)
+                        db_gig.save()
+                    except DatabaseError:
+                        # Now here's a problem.  This tends to happen if the
+                        # ImportIdentifiers have got all mixed up.  Usually a
+                        # bit of manual jiggery-pokery is needed to fix this.
+                        logger.critical("Failed to save gig '%s'." % gig_id)
         logger.info('Import complete.')
         # Finally, save every Artist, Venue, Town, and Promoter object.  This is
         # a brute-force way of making sure every object's
