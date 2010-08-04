@@ -14,7 +14,6 @@ from django.template.defaultfilters import slugify
 from gigs.models import Gig, Artist, Venue, Town, Promoter, ImportIdentifier
 
 
-CURRENT_YEAR = datetime.date.today().year
 MONTHS = {
     'JANUARY': 1, 'FEBRUARY': 2, 'MARCH': 3, 'APRIL': 4, 'MAY': 5, 'JUNE': 6,
     'JULY': 7, 'AUGUST': 8, 'SEPTEMBER': 9, 'OCTOBER': 10, 'NOVEMBER': 11,
@@ -129,6 +128,11 @@ class Command(NoArgsCommand):
         # Current month holds the current month the gigs occur (the month is
         # given in a header row rather than in each row).
         current_month = 1
+        # Although the year the gigs take place is never mentioned, it's
+        # obviously this year.  But we need to keep track of it so we can
+        # increment it if we come across gigs in the next year (i.e. when
+        # December becomes January).
+        current_year = datetime.date.today().year
         # List of all included gigs.
         gigs = []
 
@@ -147,6 +151,12 @@ class Command(NoArgsCommand):
                         logger.debug('Month changed from %s to %s.' % (
                             REVERSED_MONTHS[current_month],
                             month_match.group('month')))
+                        # If the old month was a higher number than the new
+                        # month, it's a new year too.
+                        if current_month > MONTHS[month_match.group('month')]:
+                            logger.debug('Year changed from %d to %d.' % (
+                                current_year, current_year + 1))
+                            current_year += 1
                         current_month = MONTHS[month_match.group('month')]
                     else:
                         # Text information we can safely ignore.
@@ -164,7 +174,7 @@ class Command(NoArgsCommand):
                     # Date of the gig based on the month header row we'll have
                     # come across earlier and the date column, which contains
                     # the day of month in a format like "mon 18th".
-                    date = datetime.date(CURRENT_YEAR, current_month,
+                    date = datetime.date(current_year, current_month,
                         int(DATE_RE.match(row[0].strip('*')).group('day')))
                     # Create a gig based on this row.
                     logger.debug('Creating initial gig object.')
