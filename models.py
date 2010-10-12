@@ -331,7 +331,7 @@ class Artist(models.Model):
         except NameError:
             return False
         # Query MusicBrainz.
-        artist_filter = ArtistFilter(name="Biffy Clyro")
+        artist_filter = ArtistFilter(name=self.name)
         query = Query()
         try:
             artist = query.getArtists(artist_filter)[0].artist
