@@ -147,7 +147,7 @@ class Artist(models.Model):
     similar_artists = models.ManyToManyField("self", symmetrical=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
     mbid = models.CharField(verbose_name='MusicBrainz id', max_length=36,
-        unique=True)
+        blank=True)
     published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
@@ -365,7 +365,7 @@ class Album(models.Model):
         blank=True)
     asin = models.CharField(verbose_name='ASIN', max_length=16, blank=True)
     mbid = models.CharField(verbose_name='MusicBrainz id', max_length=36,
-        unique=True)
+        blank=True)
     published = models.BooleanField(default=True)
 
     objects = PublishedManager()
