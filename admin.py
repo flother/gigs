@@ -48,7 +48,7 @@ class ArtistAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('name', 'slug', 'biography', 'photo', 'web_site',
-                'published')
+                'mbid', 'published')
         }),
         ('Import options', {
             'classes': ('collapse',),

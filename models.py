@@ -13,7 +13,8 @@ from django.utils.dateformat import format
 from django.utils.html import strip_tags, urlize
 from markdown import markdown
 try:
-    from musicbrainz2.webservice import Query, ReleaseFilter, Release
+    from musicbrainz2.webservice import Query, ReleaseFilter, Release,\
+        ArtistFilter
 except ImportError:
     pass
 try:
@@ -145,6 +146,8 @@ class Artist(models.Model):
     web_site = models.URLField(blank=True)
     similar_artists = models.ManyToManyField("self", symmetrical=True)
     number_of_upcoming_gigs = models.IntegerField(default=0, editable=False)
+    mbid = models.CharField(verbose_name='MusicBrainz id', max_length=36,
+        unique=True)
     published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
@@ -223,7 +226,7 @@ class Artist(models.Model):
                     db_album = Album.objects.get(asin=album.asin)
                 except Album.DoesNotExist:
                     db_album = Album(artist=self, title=album.title,
-                        asin=album.asin)
+                        asin=album.asin, mbid=album.id.rsplit("/", 1)[1])
                     # MusicBrainz stores releases dates for as many countries as
                     # it can.  I'm only interested in Britain though, so look
                     # for that first.  As a fallback, us the world wide release
@@ -316,6 +319,27 @@ class Artist(models.Model):
             # Last.fm doesn't like, or on the occasional dropped connection.
             pass
 
+    def get_musicbrainz_id(self):
+        """
+        Retrieve the MusicBrainz id for this artist and save it on the
+        model.
+        """
+        # Make sure the useful bits of the musicbrainz2 package have been
+        # imported.
+        try:
+            Query, ArtistFilter
+        except NameError:
+            return False
+        # Query MusicBrainz.
+        artist_filter = ArtistFilter(name="Biffy Clyro")
+        query = Query()
+        try:
+            artist = query.getArtists(artist_filter)[0].artist
+            self.mbid = artist.id.rsplit("/", 1)[1]
+            self.save()
+        except (IndexError, AttributeError):
+            return False
+
 
 class Album(models.Model):
 
@@ -340,6 +364,8 @@ class Album(models.Model):
     released_in = models.CharField(max_length=2, choices=RELEASE_LOCATIONS,
         blank=True)
     asin = models.CharField(verbose_name='ASIN', max_length=16, blank=True)
+    mbid = models.CharField(verbose_name='MusicBrainz id', max_length=36,
+        unique=True)
     published = models.BooleanField(default=True)
 
     objects = PublishedManager()
@@ -574,6 +600,7 @@ def populate_artist_metadata(sender, **kwargs):
     if kwargs['created']:
         kwargs['instance'].get_photo()
         kwargs['instance'].get_biography()
+        kwargs['instance'].get_musicbrainz_id()
 post_save.connect(populate_artist_metadata, sender=Artist)
 
 
