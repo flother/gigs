@@ -44,6 +44,16 @@
 			</ol>
 		</div>
 	{% endif %}
+	{% if reviews %}
+		<div class="list">
+			<h2>Reviews</h2>
+			<ol>
+				{% for review in reviews %}
+					{% include "gigs/_review_in_list.html" %}
+				{% endfor %}
+			</ol>
+		</div>
+	{% endif %}
 	{% if artist.biography_html %}
 		<div id="biography_and_photo">
 			{% thumbnail artist.photo 340x238 crop="0,0" upscale bw as artist_thumb %}

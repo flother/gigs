@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from gigs.models import Gig, Artist, Album, Venue, Town, Promoter,\
+from gigs.models import Gig, Artist, Review, Album, Venue, Town, Promoter,\
     ImportIdentifier
 
 
@@ -60,6 +60,18 @@ class ArtistAdmin(admin.ModelAdmin):
     list_filter = ('published',)
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
+
+
+class ReviewAdmin(admin.ModelAdmin):
+
+    """Django ModelAdmin class for the Review model."""
+
+    date_hierarchy = 'publication_date'
+    list_display = ('headline', 'artist', 'byline', 'rating',
+        'publication_date', 'published')
+    list_filter = ('published', 'rating')
+    list_select_related = True
+    search_fields = ('headline', 'byline')
 
 
 class AlbumAdmin(admin.ModelAdmin):
@@ -138,6 +150,7 @@ class PromoterAdmin(admin.ModelAdmin):
 admin.site.register(ImportIdentifier, ImportIdentifierAdmin)
 admin.site.register(Gig, GigAdmin)
 admin.site.register(Artist, ArtistAdmin)
+admin.site.register(Review, ReviewAdmin)
 admin.site.register(Album, AlbumAdmin)
 admin.site.register(Venue, VenueAdmin)
 admin.site.register(Town, TownAdmin)

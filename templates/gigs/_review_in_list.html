@@ -1,0 +1,10 @@
+{% load typography %}
+<li>
+	<a href="{{ review.url }}" title="{{ review.headline }}{% if review.trail %}: {{ review.trail|striptags }}{% endif %}">{{ review.headline|truncate:25 }}</a>
+	<span>{{ review.publication_date|date }}</span>
+	<span title="{{ review.rating }} out of 5">
+		{% for star in review.stars%}
+			<img alt="{% if star %}*{% endif %}" height="15" src="{{ MEDIA_URL }}gigs/img/{% if not star %}no_{% endif %}star.png" width="16" />
+		{% endfor %}
+	</span>
+</li>

@@ -136,6 +136,18 @@ def artist_list(request):
         RequestContext(request))
 
 
+def artist_detail(request, slug):
+    artist = get_object_or_404(Artist.objects.published(), slug=slug)
+    # Get the three most recent reviews.
+    reviews = artist.review_set.all()
+    context = {
+        "artist": artist,
+        "reviews": reviews,
+    }
+    return render_to_response('gigs/artist_detail.html', context,
+        RequestContext(request))
+
+
 def venue_list(request):
     """List all venues by name, categorised by town."""
     town_list = Town.objects.published().select_related()

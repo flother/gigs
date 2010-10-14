@@ -577,6 +577,37 @@ class Promoter(models.Model):
         super(Promoter, self).save(force_insert, force_update)
 
 
+class Review(models.Model):
+
+    """
+    A review about an artist, an album, or a live performance.
+    """
+
+    external_id = models.CharField(max_length=256, unique=True)
+    publication_date = models.DateTimeField()
+    headline = models.CharField(max_length=256)
+    trail = models.TextField(blank=True)
+    byline = models.TextField(blank=True)
+    url = models.URLField(verbose_name="URL", verify_exists=False)
+    artist = models.ForeignKey(Artist)
+    rating = models.PositiveSmallIntegerField()
+    published = models.BooleanField(default=True)
+
+    class Meta:
+        get_latest_by = "publication_date"
+        ordering = ("-publication_date", "artist")
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.headline, self.artist)
+
+    def get_absolute_url(self):
+        """Return the URL for the offsite review."""
+        return self.url
+
+    def stars(self):
+        return ([1] * self.rating) + ([0] * (5 - self.rating))
+
+
 def ensure_gig_slug_matches_artist_slug(sender, **kwargs):
     """
     Signal receiver; called once an Artist model is saved.  If any
