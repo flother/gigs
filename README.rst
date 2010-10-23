@@ -6,7 +6,9 @@
 The ``gigs`` package is a standalone Django app that screen-scrapes gigs listed
 on the `web site of the Edinburgh institution Ripping Records`_, turning them
 into a set of database models: ``Gig``, ``Artist``, ``Album``, ``Venue``,
-``Town``, and ``Promoter``.
+``Town``, and ``Promoter``.  It also adds to that information by pulling in
+photos and biographies from Last.fm, lists of albums from MusicBrainz, and
+reviews from the Guardian.
 
 .. _web site of the Edinburgh institution Ripping Records: http://www.rippingrecords.com/tickets01.html
 
@@ -53,6 +55,7 @@ Optional libraries
 
 * pylast 0.4: http://pylast.googlecode.com/
 * musicbrainz2 0.7.0: http://musicbrainz.org/doc/PythonMusicBrainz2
+* simplejson: http://pypi.python.org/pypi/simplejson
 * Haystack 1.0.1: http://haystacksearch.org/
 
 When a new artist is created the `Last.fm`_ and `MusicBrainz`_ APIs are used to
@@ -61,6 +64,10 @@ find the artist's photos, biographies, albums, and cover art.  This requires the
 see any errors (the code fails gracefully) but you won't get the artist metadata
 either.  The same goes for the ``link_similar_artists`` command: no ``pylast``,
 no similar artists.
+
+Note that ``simplejson``, used in the ``import_artist_reviews`` command, is
+only required if you're using Python 2.5 or lower; if you're using Python 2.6
+the built-in ``json`` library will be used.
 
 .. _Last.fm: http://www.last.fm/api
 .. _MusicBrainz: http://musicbrainz.org/doc/XML_Web_Service
@@ -114,6 +121,14 @@ context processor to your project's settings::
       'gigs.context_processors.amazon_affiliate_tag',
   )
 
+If you want to import reviews from the Guardian using the
+``ìmport_artist_reviews`` command you'll need to include your Open Platform API
+key::
+
+  OPENPLATFORM_API_KEY = "apikeyhere"
+
+You can `sign up for a key at Mashery`_.
+
 Some of the templates display a `Cloudmade`_ map.  In order for the map to be
 displayed you need to add two settings and a context processor::
 
@@ -128,6 +143,7 @@ displayed you need to add two settings and a context processor::
 You can apply for an API key find out more about Cloudmade from the
 `Web Maps Studio web site`_
 
+.. _sign up for a key at Mashery: http://guardian.mashery.com/
 .. _Cloudmade: http://www.cloudmade.com/
 .. _Web Maps Studio web site: http://developers.cloudmade.com/projects/show/web-maps-studio
 
@@ -156,7 +172,7 @@ be available.  You must define the following:
 Management commands
 =====================
 
-There are four management commands included with this app, found in
+There are five management commands included with this app, found in
 ``gigs.management.commands`` and available to use via ``django-admin.py``.
 
 * ``import_albums``: imports albums from MusicBrainz for each artist.  Cover art
@@ -169,6 +185,9 @@ There are four management commands included with this app, found in
 * ``link_similar_artists``: uses the Last.fm API to connect similar artists in
   the site database.  Run this after an import and you'll see recommended
   artists and gigs in your templates.
+* ``ìmport_artist_reviews``: finds reviews for each artist from the Guardian's
+  music section. Reviews are matched to artists using MusicBrainz ids, so
+  you'll need to be using the ``musicbrainz2`` library for this to work.
 
 
 Importing the gigs data
