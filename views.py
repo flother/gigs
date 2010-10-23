@@ -138,11 +138,15 @@ def artist_list(request):
 
 def artist_detail(request, slug):
     artist = get_object_or_404(Artist.objects.published(), slug=slug)
-    # Get the three most recent reviews.
-    reviews = artist.review_set.all()
+    # Get artist reviews.
+    reviews = artist.review_set.published()
+    # Get similar artists with upcoming gigs.
+    similar_artists = artist.similar_artists.published().exclude(
+        number_of_upcoming_gigs=0)
     context = {
         "artist": artist,
         "reviews": reviews,
+        "similar_artists": similar_artists,
     }
     return render_to_response('gigs/artist_detail.html', context,
         RequestContext(request))

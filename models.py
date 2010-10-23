@@ -593,6 +593,8 @@ class Review(models.Model):
     rating = models.PositiveSmallIntegerField()
     published = models.BooleanField(default=True)
 
+    objects = PublishedManager()
+
     class Meta:
         get_latest_by = "publication_date"
         ordering = ("-publication_date", "artist")

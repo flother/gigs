@@ -63,18 +63,16 @@
 			</div>
 		</div>
 	{% endif %}
-	{% with artist.similar_artists.published as similar_artists %}
-		{% if similar_artists %}
-			<div class="list">
-				<h2>Other artists you may like</h2>
-				<ol>
-					{% for similar_artist in similar_artists %}
-						{% with similar_artist as artist %}
-							{% include "gigs/_artist_in_list.html" %}
-						{% endwith %}
-					{% endfor %}
-				</ol>
-			</div>
-		{% endif %}
-	{% endwith %}
+	{% if similar_artists %}
+		<div class="list">
+			<h2>Other artists you may like</h2>
+			<ol>
+				{% for similar_artist in similar_artists %}
+					{% with similar_artist as artist %}
+						{% include "gigs/_artist_in_list.html" %}
+					{% endwith %}
+				{% endfor %}
+			</ol>
+		</div>
+	{% endif %}
 {% endblock %}
