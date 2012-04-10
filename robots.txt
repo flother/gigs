@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /404.html
+Disallow: /screenshots/
+Disallow: /gigs/
+Disallow: /g/
+Disallow: /artists/
+Disallow: /venues/
+Disallow: /towns/
+Disallow: /town/
+Disallow: /promoters/
+Disallow: /sitemap.xml
+Disallow: /feeds/
+Disallow: /search/
