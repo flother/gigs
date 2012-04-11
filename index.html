@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>The story of Ripped Records</title>
+		<meta name="description" content="The story behind Ripped Records, a site than listed gig tickets in Glasgow and Edinburgh and ran from 2010–2012.">
+		<link href="//fonts.googleapis.com/css?family=Averia+Serif+Libre:400,400italic,700" rel="stylesheet" type="text/css">
+		<link href="/css/story.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(["_setAccount", "UA-264001-10"]);
+			_gaq.push(["_trackPageview"]);
+			(function() {
+				var ga = document.createElement("script"); ga.type = "text/javascript";
+				ga.async = true;
+				ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+				var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	</head>
+	<body>
+		<h1><span>The story of Ripped&nbsp;Records</span></h1>
+		<article>
+			<ol id="gallery">
+				<li><a href="/screenshots/home_page.html"><img alt="Thumbnail screenshot of the Ripped Records home page" height="200" src="/img/home_page_thumb.png" title="Ripped Records home page" width="200"></a></li>
+				<li><a href="/screenshots/artist.html"><img alt="Thumbnail screenshot of a Ripped Records artist page" height="200" src="/img/artist_thumb.png" title="Ripped Records artist page" width="200"></a></li>
+				<li><a href="/screenshots/venue.html"><img alt="Thumbnail screenshot of a Ripped Records venue page" height="200" src="/img/venue_thumb.png" title="Ripepd Records venue page" width="200"></a></li>
+				<li><a href="/screenshots/gig.html"><img alt="Thumbnail screenshot of a Ripped Records gig page" height="200" src="/img/gig_thumb.png" title="Ripped Records gig page" width="200"></a></li>
+				<li><a href="/screenshots/town.html"><img alt="Thumbnail screenshot of a Ripped Records town page" height="200" src="/img/town_thumb.png" title="Ripped Records town page" width="200"></a></li>
+			</ol>
+			<p>Ripped Records was a site that I ran for two years from February 2010 to March 2012. It’s special to me because it was the first real project where I used took ugly, barely parseable data and turned it into structured data.</p>
+			<h2>What was it?</h2>
+			<p>There’s a shop in the centre of Scotland’s capital, Edinburgh: Ripping Records. It’s an institution in the city and one of the last few physical connections to buying gig tickets. The shop has a big chalk board listing all the tickets they have on sale and you can chat to the staff, get recommendations, and so on. It’s fantastic.</p>
+			<p>But their website’s dreadful. I mean truly awful. It looks bad, it’s hard to use, and it’s almost impossible to discover what’s new. This is as true now in 2012 as it was back in 2009 when I took it upon myself to create something better.</p>
+			<p>My main aims were to make it easy to discover new tickets as soon as they were available, to give people visual clues as to what bands were where, and to allow people to browse by venue, band, and date — all things missing (then and still in early 2012) from the store’s own site.</p>
+			<p>There was no business model, there was no master plan, it was merely for the enjoyment found in creating something.</p>
+			<h2>The technicalities</h2>
+			<p>The site was written in Python and Django but the most interesting aspects of the project were the web APIs it used: Last.fm, MusicBrainz, CloudMade, the Guardian’s Open Platform, and — perhaps surprisingly — Google Docs.</p>
+			<h3>Using Google Docs for data scraping</h3>
+			<p>A long time ago I was noticed that there was a function in Google Spreadsheets called <code>importHtml</code>; it can import an entire table from an HTML page into a Google Docs spreadsheet, and have that spreadsheet update regularly. Google Docs allows spreadsheets to be downloaded as CSVs, and so I realised I could then download an HTML table as a CSV file with no programming or screen-scraping needed at all.</p>
+			<p>That intrigued me, so I thought I’d try and use it somehow. Ripped Records was the result. It was a lot of fun seeing that work so quickly and so smoothly. The only downside was that the information in the original table was so badly organised it took a lot of work to convert the CSV into information suitable for a normalised database.  This was where I learnt the craft of cleaning up unstructured data.</p>
+			<p>By far the biggest problem with the data was misspellings. All the data on the Ripping Records site was — and still is in 2012 — entered by hand so band names, venues, and even towns were misspelled. A lot of the site’s code tried to handle that without needing my input.</p>
+			<h3>The Guardian’s Open Platform</h3>
+			<p>In late 2010 the Guardian got in touch with me and asked if I’d like early access to an API they were developing.  It meant I’d be able to add the newspaper’s reviews of artists and live gigs, so I said yes. The API was fun to use and it was an interesting application of Linked Data. And of course it was nice to see my site <a href="http://www.guardian.co.uk/open-platform/blog/references-in-api">featured on one of the Guardian’s blogs</a>.  Fame, however fleeting and minute.</p>
+			<h3>The other APIs</h3>
+			<p>Using the CloudMade API was fantastic fun. It’s like Google Maps only you can design the maps, which means the site has a more homogeneous feel rather than some ugly bright green and blue map sitting uncomfortably above everything else. When I shut the site down CloudMade looked like it was starting to be superseded — in feature-set, mindshare, and usability — by MapBox, but I’m amazed I didn’t see it used more frequently over the last few years.</p>
+			<p>As for Last.fm and MusicBrainz, I didn’t use the APIs directly but rather used Python libraries to do the heavy lifting for me. That made it incredibly easy to do some quite interesting things — album art, artist biographies, and so on. That’s the beauty of APIs — and open-source — the sum is greater than the parts.</p>
+			<h2>The end</h2>
+			<p>The longer we go on the closer we come to death, and so it goes for Ripped Records, a site that fun was to create but never found the fame that would have given me enough reason to maintain and improve it. The site is no more — this page is the last remnant — and so with hosting fees saved I can head along to Ripping Records on Edinburgh’s South Bridge and have myself some of their tickets.</p>
+		</article>
+	</body>
+</html>
